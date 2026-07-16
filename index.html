@@ -99,14 +99,16 @@
     flex: none; width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--line);
     background: var(--panel-2); color: var(--text); font-size: 16px; cursor: pointer;
   }
-  #movieEdit { display: none; gap: 8px; margin-top: 10px; }
+  #movieEdit { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
   #movieEdit.open { display: flex; }
   #movieEdit input {
-    flex: 1; min-width: 0; padding: 10px 12px; font-size: 16px; font-family: inherit;
+    width: 100%; box-sizing: border-box; padding: 10px 12px; font-size: 16px; font-family: inherit;
     color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; outline: none;
   }
+  #movieEdit input:focus { border-color: var(--violet); }
+  #movieEdit .btns { display: flex; gap: 8px; }
   #movieEdit button {
-    padding: 10px 14px; border: none; border-radius: 10px; font-family: inherit; font-weight: 700;
+    flex: 1; padding: 10px 14px; border: none; border-radius: 10px; font-family: inherit; font-weight: 700;
     cursor: pointer; font-size: 14px;
   }
   #movieEdit .save { background: var(--grad); color: #fff; }
@@ -324,8 +326,12 @@
       <div class="byline" id="movieByline"></div>
       <div id="movieEdit">
         <input id="movieInput" type="text" maxlength="60" placeholder="Movie title">
-        <button class="save" id="movieSave">Set</button>
-        <button class="cancel" id="movieCancel">✕</button>
+        <input id="movieTheaterInput" type="text" maxlength="60" placeholder="Theater (optional)">
+        <input id="movieShowtimeInput" type="text" maxlength="30" placeholder="Showtime (optional — e.g. 7:45 PM)">
+        <div class="btns">
+          <button class="save" id="movieSave">Set</button>
+          <button class="cancel" id="movieCancel">Cancel</button>
+        </div>
       </div>
     </div>
     <button class="icon-btn" id="movieEditBtn" aria-label="Edit movie">✏️</button>
@@ -634,15 +640,18 @@ function renderUser() {
 }
 function renderMovie() {
   const t = $('movieTitle');
+  const bits = [];
   if (data.movie && data.movie.title) {
     t.textContent = data.movie.title;
     t.classList.remove('empty');
-    $('movieByline').textContent = data.movie.setBy ? `picked by ${data.movie.setBy}` : '';
+    if (data.movie.setBy) bits.push(`picked by ${data.movie.setBy}`);
   } else {
     t.textContent = 'No movie picked yet';
     t.classList.add('empty');
-    $('movieByline').textContent = '';
   }
+  if (data.theater) bits.push(`📍 ${data.theater}`);
+  if (data.showtime) bits.push(data.showtime);
+  $('movieByline').textContent = bits.join(' · ');
 }
 function bestNights() {
   const counts = {};
@@ -859,17 +868,26 @@ $('userChip').addEventListener('click', () => {
 });
 $('movieEditBtn').addEventListener('click', () => {
   $('movieInput').value = (data.movie && data.movie.title) || '';
+  $('movieTheaterInput').value = data.theater || '';
+  $('movieShowtimeInput').value = data.showtime || '';
   $('movieEdit').classList.add('open');
   $('movieInput').focus();
 });
 $('movieCancel').addEventListener('click', () => $('movieEdit').classList.remove('open'));
 $('movieSave').addEventListener('click', () => {
   const title = $('movieInput').value.trim();
+  const theater = $('movieTheaterInput').value.trim();
+  const showtime = $('movieShowtimeInput').value.trim();
   $('movieEdit').classList.remove('open');
-  const movie = { title, setBy: myName, updatedAt: new Date().toISOString() };
-  data.movie = movie;
+  const extra = { theater, showtime };
+  if (title !== ((data.movie && data.movie.title) || '')) {
+    extra.movie = { title, setBy: myName, updatedAt: new Date().toISOString() };
+    data.movie = extra.movie;
+  }
+  data.theater = theater;
+  data.showtime = showtime;
   render();
-  save({ movie });
+  save(extra);
 });
 $('saveBtn').addEventListener('click', () => save());
 $('bestCard').addEventListener('click', () => { if (!isHost()) openSheet($('bestCard').dataset.date); });
