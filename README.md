@@ -16,6 +16,7 @@ The whole thing is one `index.html` — no framework, no build step, no server. 
 - **Theater & showtime** — anyone can set or update them (whoever buys the tickets fills them in)
 - **Add to calendar** — once locked, everyone gets an .ics download and a Google Calendar link generated right in the browser
 - **Auto-reset** — the morning after the locked night, the board wipes itself clean for the next round
+- **Sit one out** — a "clear my nights" link empties all your picks in one tap (with confirmation) if you can't make this round
 - **Safe concurrent saves** — saving re-fetches and merges, so two people saving at once can't wipe each other out
 
 ## Setup (~15 minutes)
