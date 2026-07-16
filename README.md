@@ -58,7 +58,8 @@ Text the link to your group. Done.
 1. Open the link, enter your name once
 2. Tap the evenings you're free, then hit **💾 Save my nights**
 3. Hold a day to see who's in; watch the **Best Night** card find your date
-4. Set the movie with the ✏️ on the Now Showing card
+4. Set the movie, theater, and showtime with the ✏️ on the Now Showing card (anyone can, anytime)
+5. The host taps a best night to lock it in — everyone gets the official banner and can add it to their calendar
 
 ## Data model
 
