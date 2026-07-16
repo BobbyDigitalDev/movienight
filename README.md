@@ -12,6 +12,10 @@ The whole thing is one `index.html` — no framework, no build step, no server. 
 - **🏆 Best Night card** — automatically surfaces the date(s) with the most overlap
 - **Who's in?** — hold any day to see the names; tap a name chip to spotlight one person's availability
 - **Now Showing card** — anyone can set the movie you're all going to see
+- **Host lock-in** — the host taps a best night and locks it; everyone sees an "🎬 It's Official" banner with the date, movie, theater, showtime, and who's going
+- **Theater & showtime** — anyone can set or update them (whoever buys the tickets fills them in)
+- **Add to calendar** — once locked, everyone gets an .ics download and a Google Calendar link generated right in the browser
+- **Auto-reset** — the morning after the locked night, the board wipes itself clean for the next round
 - **Safe concurrent saves** — saving re-fetches and merges, so two people saving at once can't wipe each other out
 
 ## Setup (~15 minutes)
@@ -34,11 +38,12 @@ Fork or clone this repo, then open `index.html` and find the `CONFIG` block at t
 const CONFIG = {
   BIN_ID: '…',      // ← replace with your Bin ID
   ACCESS_KEY: '…',  // ← replace with your Access Key
+  HOST_NAME: '…',   // ← the name (as entered in the app) of your group's host
   ...
 };
 ```
 
-Replace both values with your own. (The values you'll find there belong to the original author's movie club — the app won't work for your group until you swap them.)
+Replace the values with your own. (The bin values you'll find there belong to the original author's movie club — the app won't work for your group until you swap them.) `HOST_NAME` decides who sees the lock-in button; it matches case-insensitively against the name that person enters on the welcome screen.
 
 ### 3. Deploy
 
@@ -61,9 +66,14 @@ Text the link to your group. Done.
 {
   "movie":        { "title": "…", "setBy": "…", "updatedAt": "…" },
   "availability": { "alex": ["2026-07-24", "2026-08-07"] },
+  "lockedDate":   "2026-08-07",
+  "theater":      "AMC Empire 25",
+  "showtime":     "7:45 PM",
   "updatedAt":    "…"
 }
 ```
+
+When `lockedDate` is set, everyone sees the official-night banner. Once that date passes, the first person to open the page clears the board (picks, movie, and lock) for the next round.
 
 ## Resetting the board
 
@@ -81,11 +91,6 @@ python3 -m http.server 8000
 ## Notes on the free tier
 
 JSONBin's free tier allows 1 request/second, which is why saves space their read/write calls ~1.1s apart and the page polls others' picks every 45s. For a group of friends this is far more capacity than you'll ever use.
-
-## Roadmap
-
-- **Host mode** — the host locks in the official night; everyone sees a confirmation banner
-- **"Start next movie night"** — one-tap board reset for the host
 
 ## License
 

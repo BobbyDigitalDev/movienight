@@ -121,6 +121,29 @@
   }
   #lockedCard .line { font-family: 'Unbounded', sans-serif; font-size: 17px; font-weight: 600; margin-top: 5px; }
   #lockedCard .sub { font-size: 14px; color: var(--muted); margin-top: 3px; }
+  #lockedWho { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  #lockedWho .chip { cursor: default; font-size: 13px; padding: 6px 11px; }
+  #lockedOut { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  #lockedHead { display: flex; align-items: center; justify-content: space-between; }
+  #detailsEdit { display: none; flex-direction: column; gap: 8px; margin-top: 12px; }
+  #detailsEdit.open { display: flex; }
+  #detailsEdit input {
+    width: 100%; padding: 10px 12px; font-size: 15px; font-family: inherit;
+    color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; outline: none;
+  }
+  #detailsEdit input:focus { border-color: var(--violet); }
+  #detailsEdit .row { display: flex; gap: 8px; }
+  #detailsEdit .row button {
+    flex: 1; padding: 10px; border: none; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer;
+  }
+  #detailsSave { background: var(--grad); color: #fff; }
+  #detailsCancel { background: var(--panel-2); color: var(--muted); border: 1px solid var(--line) !important; }
+  #calRow { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .cal-btn {
+    flex: 1; min-width: 130px; padding: 11px 10px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--panel-2); color: var(--text); font-weight: 600; font-size: 13px; cursor: pointer;
+    text-align: center; text-decoration: none; font-family: inherit; display: block;
+  }
 
   #bestCard {
     border: 1px solid transparent;
@@ -309,9 +332,26 @@
   </div>
 
   <div class="card" id="lockedCard" hidden>
-    <div class="label">🎬 It's Official</div>
+    <div id="lockedHead">
+      <div class="label">🎬 It's Official</div>
+      <button class="icon-btn" id="detailsEditBtn" aria-label="Edit theater and showtime" style="width:34px;height:34px;font-size:14px;">✏️</button>
+    </div>
     <div class="line" id="lockedLine"></div>
     <div class="sub" id="lockedSub"></div>
+    <div id="lockedWho"></div>
+    <div id="lockedOut"></div>
+    <div id="detailsEdit">
+      <input id="detailsTheater" type="text" maxlength="60" placeholder="Theater (e.g. AMC Empire 25)">
+      <input id="detailsShowtime" type="text" maxlength="30" placeholder="Showtime (e.g. 7:45 PM)">
+      <div class="row">
+        <button id="detailsSave">Set details</button>
+        <button id="detailsCancel">Cancel</button>
+      </div>
+    </div>
+    <div id="calRow" hidden>
+      <button class="cal-btn" id="icsBtn">📅 Add to calendar</button>
+      <a class="cal-btn" id="gcalBtn" target="_blank" rel="noopener">Google Calendar ↗</a>
+    </div>
   </div>
 
   <div class="card" id="bestCard" hidden>
@@ -344,6 +384,8 @@
   <div class="who" id="lockWho"></div>
   <div class="out" id="lockOut"></div>
   <input id="lockMovie" type="text" maxlength="60" placeholder="Movie title (optional — set it now or later)">
+  <input id="lockTheater" type="text" maxlength="60" placeholder="Theater (optional)">
+  <input id="lockShowtime" type="text" maxlength="30" placeholder="Showtime (optional — e.g. 7:45 PM)">
   <button id="lockConfirm">Lock it in 🎬 — this is movie night</button>
   <button id="lockCancel">Not yet</button>
 </div>
@@ -364,7 +406,7 @@ const PALETTE = ['#ff2d95','#22d3ee','#a3e635','#ffb020','#8b5cf6','#f43f5e','#1
 
 /* ================= STATE ================= */
 let myName = localStorage.getItem('mn_name') || '';
-let data = { movie: { title:'', setBy:'', updatedAt:'' }, availability: {}, lockedDate: '', updatedAt: '' };
+let data = { movie: { title:'', setBy:'', updatedAt:'' }, availability: {}, lockedDate: '', theater: '', showtime: '', updatedAt: '' };
 let myDates = new Set();
 let dirty = false;        // unsaved local calendar changes
 let saving = false;
@@ -447,6 +489,8 @@ async function maybeReset(record) {
   record.availability = {};
   record.movie = { title: '', setBy: '', updatedAt: '' };
   record.lockedDate = '';
+  record.theater = '';
+  record.showtime = '';
   record.updatedAt = new Date().toISOString();
   await new Promise(res => setTimeout(res, CONFIG.PUT_DELAY));
   await apiPut(record);
@@ -487,6 +531,8 @@ async function save(extra) {
     fresh.availability[myName] = [...myDates].filter(d => d >= todayIso()).sort();
     if (extra && extra.movie) fresh.movie = extra.movie;
     if (extra && 'lock' in extra) fresh.lockedDate = extra.lock;
+    if (extra && 'theater' in extra) fresh.theater = extra.theater;
+    if (extra && 'showtime' in extra) fresh.showtime = extra.showtime;
     fresh.updatedAt = new Date().toISOString();
     await new Promise(res => setTimeout(res, CONFIG.PUT_DELAY));
     await apiPut(fresh);
@@ -515,11 +561,72 @@ function renderLocked() {
   const card = $('lockedCard');
   if (!data.lockedDate) { card.hidden = true; return; }
   card.hidden = false;
-  $('lockedLine').textContent = prettyDate(data.lockedDate);
+  $('lockedLine').textContent = prettyDate(data.lockedDate) + (data.showtime ? ` · ${data.showtime}` : '');
   const movie = data.movie && data.movie.title;
   const free = freeOn(data.lockedDate);
-  $('lockedSub').textContent = (movie ? `${movie} · ` : 'Movie TBD · ') + `${free.length} going` +
-    (isHost() ? ' · hold the day to unlock' : '');
+  const out = members().filter(n => !free.includes(n));
+  const bits = [movie || 'Movie TBD'];
+  if (data.theater) bits.push(`📍 ${data.theater}`);
+  bits.push(`${free.length} going`);
+  if (isHost()) bits.push('hold the day to unlock');
+  $('lockedSub').textContent = bits.join(' · ');
+  $('lockedWho').innerHTML = free.map(n =>
+    `<span class="chip"><span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}</span>`
+  ).join('');
+  $('lockedOut').textContent = out.length ? `Can't make it: ${out.join(', ')}` : '';
+  $('calRow').hidden = false;
+  $('gcalBtn').href = gcalLink();
+}
+/* ---- Calendar export ---- */
+function eventTimes() {
+  const [y, mo, d] = data.lockedDate.split('-').map(Number);
+  let h = 19, min = 0;
+  const m = (data.showtime || '').match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+  if (m) {
+    h = parseInt(m[1], 10);
+    min = m[2] ? parseInt(m[2], 10) : 0;
+    const ap = (m[3] || '').toLowerCase();
+    if (ap === 'pm' && h < 12) h += 12;
+    if (ap === 'am' && h === 12) h = 0;
+    if (!ap && h <= 8) h += 12; // "7:45" on a movie app means evening
+  }
+  const start = new Date(y, mo - 1, d, h, min);
+  const end = new Date(start.getTime() + 3 * 3600 * 1000);
+  return { start, end };
+}
+const fmtCal = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+function eventSummary() { return 'Movie Night' + (data.movie && data.movie.title ? ` — ${data.movie.title}` : ''); }
+function eventDescription() { return `Going: ${freeOn(data.lockedDate).join(', ')}`; }
+function gcalLink() {
+  const { start, end } = eventTimes();
+  const p = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: eventSummary(),
+    dates: `${fmtCal(start)}/${fmtCal(end)}`,
+    location: data.theater || '',
+    details: eventDescription()
+  });
+  return `https://calendar.google.com/calendar/render?${p}`;
+}
+function downloadICS() {
+  const { start, end } = eventTimes();
+  const escICS = s => String(s).replace(/([,;\\])/g, '\\$1');
+  const ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//MovieNight//EN', 'BEGIN:VEVENT',
+    `UID:${data.lockedDate}-${Date.now()}@movienight`,
+    `DTSTAMP:${fmtCal(new Date())}`,
+    `DTSTART:${fmtCal(start)}`,
+    `DTEND:${fmtCal(end)}`,
+    `SUMMARY:${escICS(eventSummary())}`,
+    `LOCATION:${escICS(data.theater || '')}`,
+    `DESCRIPTION:${escICS(eventDescription())}`,
+    'END:VEVENT', 'END:VCALENDAR'
+  ].join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+  a.download = 'movienight.ics';
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 function renderUser() {
   $('userName').textContent = myName;
@@ -584,6 +691,8 @@ function openLockSheet(iso) {
     : '<div class="nobody">Nobody has picked this night yet.</div>';
   $('lockOut').textContent = out.length ? `Can't make it: ${out.join(', ')}` : 'Everyone can make it 🎉';
   $('lockMovie').value = (data.movie && data.movie.title) || '';
+  $('lockTheater').value = data.theater || '';
+  $('lockShowtime').value = data.showtime || '';
   $('lockConfirm').dataset.date = iso;
   $('lockSheet').classList.add('open');
   $('scrim').classList.add('open');
@@ -765,15 +874,34 @@ $('movieSave').addEventListener('click', () => {
 $('saveBtn').addEventListener('click', () => save());
 $('bestCard').addEventListener('click', () => { if (!isHost()) openSheet($('bestCard').dataset.date); });
 $('lockCancel').addEventListener('click', closeSheet);
+$('detailsEditBtn').addEventListener('click', () => {
+  $('detailsTheater').value = data.theater || '';
+  $('detailsShowtime').value = data.showtime || '';
+  $('detailsEdit').classList.add('open');
+  $('detailsTheater').focus();
+});
+$('detailsCancel').addEventListener('click', () => $('detailsEdit').classList.remove('open'));
+$('detailsSave').addEventListener('click', () => {
+  const theater = $('detailsTheater').value.trim();
+  const showtime = $('detailsShowtime').value.trim();
+  $('detailsEdit').classList.remove('open');
+  data.theater = theater;
+  data.showtime = showtime;
+  render();
+  save({ theater, showtime });
+});
+$('icsBtn').addEventListener('click', downloadICS);
 $('lockConfirm').addEventListener('click', () => {
   const iso = $('lockConfirm').dataset.date;
   const title = $('lockMovie').value.trim();
-  const extra = { lock: iso };
+  const extra = { lock: iso, theater: $('lockTheater').value.trim(), showtime: $('lockShowtime').value.trim() };
   if (title && title !== (data.movie && data.movie.title)) {
     extra.movie = { title, setBy: myName, updatedAt: new Date().toISOString() };
     data.movie = extra.movie;
   }
   data.lockedDate = iso;
+  data.theater = extra.theater;
+  data.showtime = extra.showtime;
   closeSheet();
   render();
   save(extra);
