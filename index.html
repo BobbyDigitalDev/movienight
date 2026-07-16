@@ -180,6 +180,11 @@
   }
   .chip .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
   .chip.active { border-color: #fff; }
+  .chip .x {
+    margin-left: 4px; padding: 2px 4px; color: var(--muted); font-size: 12px; line-height: 1;
+    border-radius: 6px;
+  }
+  .chip .x:active { color: #fff; background: var(--panel-2); }
   #legend.filtering .chip:not(.active) { opacity: .35; }
 
   #clearBtn {
@@ -542,6 +547,7 @@ async function save(extra) {
   btn.textContent = 'Saving…';
   try {
     const fresh = pruneOld(await apiGet());        // re-read, so we never clobber the other guys
+    if (extra && extra.remove) delete fresh.availability[extra.remove];
     fresh.availability[myName] = [...myDates].filter(d => d >= todayIso()).sort();
     if (extra && extra.movie) fresh.movie = extra.movie;
     if (extra && 'lock' in extra) fresh.lockedDate = extra.lock;
@@ -724,6 +730,18 @@ function renderLegend() {
     chip.className = 'chip' + (filterName === n ? ' active' : '');
     chip.innerHTML = `<span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}`;
     chip.onclick = () => { filterName = (filterName === n) ? null : n; render(); };
+    if (isHost() && n !== myName) {
+      const x = document.createElement('span');
+      x.className = 'x';
+      x.textContent = '✕';
+      x.title = `Remove ${n}`;
+      x.onclick = e => {
+        e.stopPropagation();
+        if (!confirm(`Remove ${n} from the group completely? Their picks will be deleted. They can rejoin anytime by entering their name again.`)) return;
+        removeMember(n);
+      };
+      chip.appendChild(x);
+    }
     el.appendChild(chip);
   }
 }
@@ -918,6 +936,12 @@ $('detailsSave').addEventListener('click', () => {
   save({ theater, showtime });
 });
 $('icsBtn').addEventListener('click', downloadICS);
+function removeMember(name) {
+  delete data.availability[name];
+  if (filterName === name) filterName = null;
+  render();
+  save({ remove: name });
+}
 $('clearBtn').addEventListener('click', () => {
   if (!confirm('Clear all your nights for this round? You can always tap days again if plans change.')) return;
   myDates.clear();

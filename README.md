@@ -17,6 +17,7 @@ The whole thing is one `index.html` — no framework, no build step, no server. 
 - **Add to calendar** — once locked, everyone gets an .ics download and a Google Calendar link generated right in the browser
 - **Auto-reset** — the morning after the locked night, the board wipes itself clean for the next round
 - **Sit one out** — a "clear my nights" link empties all your picks in one tap (with confirmation) if you can't make this round
+- **Host member removal** — the host sees a ✕ on each name chip to remove someone entirely (stray testers, departed members); anyone removed can rejoin just by entering their name again
 - **Safe concurrent saves** — saving re-fetches and merges, so two people saving at once can't wipe each other out
 
 ## Setup (~15 minutes)
