@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0714">
+<title>Movie Night 🍿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0714;
+    --panel: #171029;
+    --panel-2: #1f1638;
+    --line: #2c2150;
+    --text: #f5f0ff;
+    --muted: #9d92c4;
+    --magenta: #ff2d95;
+    --violet: #8b5cf6;
+    --cyan: #22d3ee;
+    --grad: linear-gradient(135deg, #ff2d95, #8b5cf6 55%, #22d3ee);
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(1000px 500px at 85% -10%, rgba(139,92,246,.22), transparent 60%),
+      radial-gradient(800px 400px at -10% 10%, rgba(255,45,149,.16), transparent 60%),
+      radial-gradient(900px 500px at 50% 110%, rgba(34,211,238,.12), transparent 60%);
+    color: var(--text);
+    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .wrap { max-width: 520px; margin: 0 auto; padding: 16px 16px 90px; }
+  @media (min-width: 860px) { .wrap { max-width: 880px; } }
+
+  /* ---------- Welcome ---------- */
+  #welcome {
+    position: fixed; inset: 0; z-index: 50;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 18px; padding: 32px; text-align: center;
+    background: var(--bg);
+    background-image:
+      radial-gradient(900px 500px at 50% -10%, rgba(139,92,246,.35), transparent 60%),
+      radial-gradient(700px 400px at 20% 100%, rgba(255,45,149,.25), transparent 60%),
+      radial-gradient(700px 400px at 90% 90%, rgba(34,211,238,.2), transparent 60%);
+  }
+  #welcome .popcorn { font-size: 64px; filter: drop-shadow(0 0 24px rgba(255,45,149,.5)); }
+  #welcome h1 {
+    font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: clamp(28px, 8vw, 44px);
+    margin: 0; line-height: 1.1; letter-spacing: .02em;
+    background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  #welcome p { color: var(--muted); margin: 0; font-size: 17px; max-width: 340px; }
+  #welcome form { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; margin-top: 8px; }
+  #welcome input {
+    width: 100%; padding: 16px 18px; font-size: 18px; font-family: inherit; text-align: center;
+    color: var(--text); background: var(--panel); border: 2px solid var(--line); border-radius: var(--radius);
+    outline: none; transition: border-color .2s;
+  }
+  #welcome input:focus { border-color: var(--violet); }
+  #welcome button {
+    padding: 16px; font-size: 18px; font-weight: 700; font-family: inherit; color: #fff;
+    background: var(--grad); border: none; border-radius: var(--radius); cursor: pointer;
+    box-shadow: 0 8px 30px rgba(255,45,149,.35);
+    transition: transform .15s;
+  }
+  #welcome button:active { transform: scale(.97); }
+
+  /* ---------- Header ---------- */
+  header.app { display: flex; align-items: center; justify-content: space-between; padding: 6px 2px 14px; }
+  .logo { font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: .02em;
+    background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .logo .pop { -webkit-text-fill-color: initial; }
+  .user-chip {
+    display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px;
+    background: var(--panel); border: 1px solid var(--line); cursor: pointer; font-size: 14px; color: var(--text);
+  }
+  .user-chip .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .user-chip .switch { color: var(--muted); font-size: 12px; }
+
+  /* ---------- Cards ---------- */
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 14px 16px; margin-bottom: 14px;
+  }
+  .card .label { font-size: 11px; font-weight: 700; letter-spacing: .18em; color: var(--muted); text-transform: uppercase; }
+
+  #movieCard { display: flex; align-items: center; gap: 12px; }
+  #movieCard .marquee { flex: 1; min-width: 0; }
+  #movieCard .title { font-size: 19px; font-weight: 700; margin-top: 3px; overflow-wrap: break-word; }
+  #movieCard .title.empty { color: var(--muted); font-weight: 400; font-style: italic; }
+  #movieCard .byline { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .icon-btn {
+    flex: none; width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--line);
+    background: var(--panel-2); color: var(--text); font-size: 16px; cursor: pointer;
+  }
+  #movieEdit { display: none; gap: 8px; margin-top: 10px; }
+  #movieEdit.open { display: flex; }
+  #movieEdit input {
+    flex: 1; min-width: 0; padding: 10px 12px; font-size: 16px; font-family: inherit;
+    color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; outline: none;
+  }
+  #movieEdit button {
+    padding: 10px 14px; border: none; border-radius: 10px; font-family: inherit; font-weight: 700;
+    cursor: pointer; font-size: 14px;
+  }
+  #movieEdit .save { background: var(--grad); color: #fff; }
+  #movieEdit .cancel { background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
+
+  #bestCard {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--panel), var(--panel)) padding-box,
+      var(--grad) border-box;
+    cursor: pointer;
+  }
+  #bestCard .best-line { font-size: 17px; font-weight: 700; margin-top: 4px; }
+  #bestCard .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  .instructions { font-size: 14px; color: var(--muted); margin: 2px 2px 12px; line-height: 1.5; }
+
+  /* ---------- Legend ---------- */
+  #legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .chip {
+    display: flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 999px;
+    background: var(--panel); border: 1px solid var(--line); font-size: 14px; cursor: pointer;
+    transition: opacity .2s, border-color .2s;
+  }
+  .chip .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .chip.active { border-color: #fff; }
+  #legend.filtering .chip:not(.active) { opacity: .35; }
+
+  /* ---------- Calendars ---------- */
+  #months { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  @media (min-width: 860px) { #months { grid-template-columns: 1fr 1fr; align-items: start; } }
+  .month { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
+  .month h2 {
+    font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 600; margin: 2px 4px 12px; letter-spacing: .02em;
+  }
+  .dow, .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .dow { margin-bottom: 6px; }
+  .dow span { text-align: center; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .05em; }
+  .day {
+    position: relative; aspect-ratio: 1; border-radius: 12px;
+    background: var(--panel-2); border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+    transition: transform .1s, box-shadow .2s, opacity .2s;
+  }
+  .day.blank { background: transparent; border: none; cursor: default; }
+  .day.past { opacity: .22; cursor: default; }
+  .day.mine {
+    color: #fff; border-color: transparent;
+    box-shadow: 0 0 14px var(--glow, rgba(255,45,149,.55));
+    background: var(--mycolor, var(--magenta));
+  }
+  .day.best-day { outline: 2px solid #fff; outline-offset: 1px; }
+  .day.dimmed { opacity: .25; }
+  .day:not(.past):not(.blank):active { transform: scale(.92); }
+  .day .count {
+    position: absolute; top: -5px; right: -4px; min-width: 18px; height: 18px; padding: 0 4px;
+    border-radius: 999px; background: var(--grad); color: #fff;
+    font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.5);
+  }
+  .day .dots { position: absolute; bottom: 4px; display: flex; gap: 3px; }
+  .day .dots i { width: 5px; height: 5px; border-radius: 50%; }
+
+  /* ---------- Save bar ---------- */
+  #saveBar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 45;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: linear-gradient(transparent, rgba(5,3,12,.85) 30%);
+    display: flex; justify-content: center;
+    transform: translateY(110%); transition: transform .25s cubic-bezier(.3,1,.4,1);
+  }
+  #saveBar.show { transform: translateY(0); }
+  #saveBtn {
+    width: 100%; max-width: 480px; padding: 16px; font-size: 17px; font-weight: 700; font-family: inherit;
+    color: #fff; background: var(--grad); border: none; border-radius: var(--radius); cursor: pointer;
+    box-shadow: 0 8px 30px rgba(255,45,149,.4);
+    transition: transform .15s, opacity .2s;
+  }
+  #saveBtn:active { transform: scale(.98); }
+  #saveBtn:disabled { opacity: .6; cursor: wait; }
+  #saveBtn.error { background: linear-gradient(135deg, #ffb020, #f43f5e); }
+
+  /* ---------- Status pill ---------- */
+  #status {
+    position: fixed; bottom: 86px; left: 50%; transform: translateX(-50%); z-index: 40;
+    padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    background: var(--panel); border: 1px solid var(--line); color: var(--muted);
+    opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap;
+  }
+  #status.show { opacity: 1; }
+  #status.ok { color: #a3e635; }
+  #status.err { color: #ffb020; }
+
+  /* ---------- Bottom sheet ---------- */
+  #scrim {
+    position: fixed; inset: 0; z-index: 60; background: rgba(5,3,12,.6);
+    opacity: 0; pointer-events: none; transition: opacity .25s;
+  }
+  #scrim.open { opacity: 1; pointer-events: auto; }
+  #sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 61;
+    max-width: 520px; margin: 0 auto;
+    background: var(--panel); border: 1px solid var(--line); border-bottom: none;
+    border-radius: 20px 20px 0 0; padding: 18px 20px calc(24px + env(safe-area-inset-bottom));
+    transform: translateY(105%); transition: transform .28s cubic-bezier(.3,1,.4,1);
+  }
+  #sheet.open { transform: translateY(0); }
+  #sheet .handle { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 0 auto 14px; }
+  #sheet h3 { margin: 0 0 12px; font-size: 18px; }
+  #sheet .who { display: flex; flex-direction: column; gap: 10px; }
+  #sheet .who .row { display: flex; align-items: center; gap: 10px; font-size: 16px; }
+  #sheet .who .dot { width: 12px; height: 12px; border-radius: 50%; }
+  #sheet .nobody { color: var(--muted); font-size: 15px; }
+  #sheet .out { color: var(--muted); font-size: 13px; margin-top: 12px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div id="welcome">
+  <div class="popcorn">🍿</div>
+  <h1>MOVIE NIGHT</h1>
+  <p>Tap the evenings you're free. We'll find the night the most of us can make it.</p>
+  <form id="nameForm">
+    <input id="nameInput" type="text" maxlength="20" placeholder="Your name" autocomplete="off" required>
+    <button type="submit">Let's Go 🎬</button>
+  </form>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <header class="app">
+    <div class="logo"><span class="pop">🍿</span> MOVIE NIGHT</div>
+    <div class="user-chip" id="userChip" title="Switch name">
+      <span class="dot" id="userDot"></span>
+      <span id="userName"></span>
+      <span class="switch">⇄</span>
+    </div>
+  </header>
+
+  <div class="card" id="movieCard">
+    <div class="marquee">
+      <div class="label">Now Showing</div>
+      <div class="title empty" id="movieTitle">No movie picked yet</div>
+      <div class="byline" id="movieByline"></div>
+      <div id="movieEdit">
+        <input id="movieInput" type="text" maxlength="60" placeholder="Movie title">
+        <button class="save" id="movieSave">Set</button>
+        <button class="cancel" id="movieCancel">✕</button>
+      </div>
+    </div>
+    <button class="icon-btn" id="movieEditBtn" aria-label="Edit movie">✏️</button>
+  </div>
+
+  <div class="card" id="bestCard" hidden>
+    <div class="label">🏆 Best Night</div>
+    <div class="best-line" id="bestLine"></div>
+    <div class="sub" id="bestSub">Tap to see who's in</div>
+  </div>
+
+  <p class="instructions">
+    <strong>Tap</strong> the evenings you're free, then hit <strong>Save</strong> · tap again to clear · <strong>hold</strong> a day to see who's in.
+  </p>
+
+  <div id="legend"></div>
+  <div id="months"></div>
+</div>
+
+<div id="saveBar"><button id="saveBtn">💾 Save my nights</button></div>
+<div id="status"></div>
+<div id="scrim"></div>
+<div id="sheet">
+  <div class="handle"></div>
+  <h3 id="sheetTitle"></h3>
+  <div class="who" id="sheetWho"></div>
+  <div class="out" id="sheetOut"></div>
+</div>
+
+<script>
+/* ================= CONFIG ================= */
+const CONFIG = {
+  BIN_ID: '6a58e2e7da38895dfe662e9b',
+  ACCESS_KEY: '$2a$10$2.DP1SWYScTX7fSy2awENOAEw5o.1L2mTUCLsdHXUp40uKJ9Tc1dO',
+  API: 'https://api.jsonbin.io/v3/b',
+  POLL_MS: 45000,       // refresh others' picks while page is open
+  PUT_DELAY: 1100       // gap between the merge GET and the PUT (free tier: 1 req/sec)
+};
+const PALETTE = ['#ff2d95','#22d3ee','#a3e635','#ffb020','#8b5cf6','#f43f5e','#14b8a6','#e9d502'];
+
+/* ================= STATE ================= */
+let myName = localStorage.getItem('mn_name') || '';
+let data = { movie: { title:'', setBy:'', updatedAt:'' }, availability: {}, updatedAt: '' };
+let myDates = new Set();
+let dirty = false;        // unsaved local calendar changes
+let saving = false;
+let filterName = null;
+let longPressed = false;
+
+/* ================= HELPERS ================= */
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+const isoOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const todayIso = () => isoOf(new Date());
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function colorOf(name) {
+  let h = 0;
+  for (const ch of name.toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return PALETTE[h % PALETTE.length];
+}
+function prettyDate(iso) {
+  const [y,m,d] = iso.split('-').map(Number);
+  return new Date(y, m-1, d).toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
+}
+function members() { return Object.keys(data.availability).sort((a,b) => a.localeCompare(b)); }
+function freeOn(iso) { return members().filter(n => (data.availability[n] || []).includes(iso)); }
+
+/* ================= API ================= */
+async function describeError(r) {
+  let detail = '';
+  try { detail = (await r.json()).message || ''; } catch (e) {}
+  return `${r.status}${detail ? ': ' + detail : ''}`;
+}
+async function apiGet() {
+  const r = await fetch(`${CONFIG.API}/${CONFIG.BIN_ID}/latest`, { headers: { 'X-Access-Key': CONFIG.ACCESS_KEY } });
+  if (!r.ok) throw new Error(`read ${await describeError(r)}`);
+  return (await r.json()).record;
+}
+async function apiPut(record) {
+  const r = await fetch(`${CONFIG.API}/${CONFIG.BIN_ID}`, {
+    method: 'PUT',
+    headers: { 'X-Access-Key': CONFIG.ACCESS_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify(record)
+  });
+  if (!r.ok) throw new Error(`write ${await describeError(r)}`);
+  return record;
+}
+function pruneOld(record) {
+  const t = todayIso();
+  for (const n of Object.keys(record.availability)) {
+    record.availability[n] = (record.availability[n] || []).filter(d => d >= t);
+  }
+  return record;
+}
+
+/* ================= SYNC ================= */
+async function load({ quiet } = {}) {
+  try {
+    const fresh = pruneOld(await apiGet());
+    data = fresh;
+    if (!dirty) myDates = new Set(data.availability[myName] || []);
+    else data.availability[myName] = [...myDates].sort();
+    render();
+    if (!quiet) flashStatus('Synced ✓', 'ok');
+  } catch (e) {
+    flashStatus('Can’t reach the calendar — retrying…', 'err', 4000);
+    setTimeout(() => load({ quiet: true }), 8000);
+  }
+}
+function markDirty() {
+  dirty = true;
+  const n = myDates.size;
+  $('saveBtn').textContent = `💾 Save my nights${n ? ` (${n})` : ''}`;
+  $('saveBtn').classList.remove('error');
+  $('saveBar').classList.add('show');
+}
+async function save(extra) {
+  if (saving) return;
+  saving = true;
+  const btn = $('saveBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  try {
+    const fresh = pruneOld(await apiGet());        // re-read, so we never clobber the other guys
+    fresh.availability[myName] = [...myDates].filter(d => d >= todayIso()).sort();
+    if (extra && extra.movie) fresh.movie = extra.movie;
+    fresh.updatedAt = new Date().toISOString();
+    await new Promise(res => setTimeout(res, CONFIG.PUT_DELAY));
+    await apiPut(fresh);
+    data = fresh;
+    dirty = false;
+    render();
+    btn.disabled = false;
+    $('saveBar').classList.remove('show');
+    flashStatus('Saved ✓ Your nights are in!', 'ok', 2500);
+  } catch (e) {
+    btn.disabled = false;
+    btn.classList.add('error');
+    btn.textContent = '⚠️ Save failed — tap to try again';
+    flashStatus(`Couldn't save (${e.message})`, 'err', 6000);
+  } finally {
+    saving = false;
+  }
+}
+
+/* ================= RENDER ================= */
+function render() {
+  renderUser(); renderMovie(); renderBest(); renderLegend(); renderMonths();
+}
+function renderUser() {
+  $('userName').textContent = myName;
+  $('userDot').style.background = colorOf(myName);
+}
+function renderMovie() {
+  const t = $('movieTitle');
+  if (data.movie && data.movie.title) {
+    t.textContent = data.movie.title;
+    t.classList.remove('empty');
+    $('movieByline').textContent = data.movie.setBy ? `picked by ${data.movie.setBy}` : '';
+  } else {
+    t.textContent = 'No movie picked yet';
+    t.classList.add('empty');
+    $('movieByline').textContent = '';
+  }
+}
+function bestNights() {
+  const counts = {};
+  for (const n of members()) for (const d of data.availability[n] || []) counts[d] = (counts[d] || 0) + 1;
+  const max = Math.max(0, ...Object.values(counts));
+  if (max < 2) return { max: 0, dates: [] };
+  return { max, dates: Object.keys(counts).filter(d => counts[d] === max).sort() };
+}
+function renderBest() {
+  const { max, dates } = bestNights();
+  const card = $('bestCard');
+  if (!dates.length) { card.hidden = true; return; }
+  card.hidden = false;
+  const total = members().length;
+  const shown = dates.slice(0, 3).map(prettyDate).join('  ·  ');
+  const extra = dates.length > 3 ? ` +${dates.length - 3} more` : '';
+  $('bestLine').textContent = `${shown}${extra}`;
+  $('bestSub').textContent = `${max} of ${total} free — tap to see who's in`;
+  card.dataset.date = dates[0];
+}
+function renderLegend() {
+  const el = $('legend');
+  el.innerHTML = '';
+  el.classList.toggle('filtering', !!filterName);
+  for (const n of members()) {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (filterName === n ? ' active' : '');
+    chip.innerHTML = `<span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}`;
+    chip.onclick = () => { filterName = (filterName === n) ? null : n; render(); };
+    el.appendChild(chip);
+  }
+}
+function renderMonths() {
+  const holder = $('months');
+  holder.innerHTML = '';
+  const now = new Date();
+  const best = new Set(bestNights().dates);
+  for (let m = 0; m < 2; m++) {
+    const first = new Date(now.getFullYear(), now.getMonth() + m, 1);
+    const monthEl = document.createElement('div');
+    monthEl.className = 'month';
+    monthEl.innerHTML = `<h2>${first.toLocaleDateString(undefined, { month:'long', year:'numeric' })}</h2>
+      <div class="dow">${['S','M','T','W','T','F','S'].map(d => `<span>${d}</span>`).join('')}</div>`;
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    for (let i = 0; i < first.getDay(); i++) {
+      const b = document.createElement('div'); b.className = 'day blank'; grid.appendChild(b);
+    }
+    const daysInMonth = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+    const t = todayIso();
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = isoOf(new Date(first.getFullYear(), first.getMonth(), d));
+      const cell = document.createElement('div');
+      cell.className = 'day';
+      cell.textContent = d;
+      cell.dataset.date = iso;
+      const past = iso < t;
+      if (past) cell.classList.add('past');
+      const free = freeOn(iso);
+      const mine = myDates.has(iso);
+      if (mine) {
+        cell.classList.add('mine');
+        const c = colorOf(myName);
+        cell.style.setProperty('--mycolor', c);
+        cell.style.setProperty('--glow', c + '88');
+      }
+      const count = free.length + ((mine && !free.includes(myName)) ? 1 : 0);
+      if (count > 0 && !past) {
+        cell.innerHTML += `<span class="count">${count}</span>`;
+        const others = free.filter(n => n !== myName).slice(0, 4);
+        if (others.length) {
+          cell.innerHTML += `<span class="dots">${others.map(n => `<i style="background:${colorOf(n)}"></i>`).join('')}</span>`;
+        }
+      }
+      if (best.has(iso) && !past) cell.classList.add('best-day');
+      if (filterName && !past) {
+        const personFree = filterName === myName ? mine : free.includes(filterName);
+        if (!personFree) cell.classList.add('dimmed');
+      }
+      if (!past) attachDayEvents(cell, iso);
+      grid.appendChild(cell);
+    }
+    monthEl.appendChild(grid);
+    holder.appendChild(monthEl);
+  }
+}
+
+/* ================= DAY INTERACTION ================= */
+function attachDayEvents(cell, iso) {
+  let timer = null;
+  cell.addEventListener('pointerdown', () => {
+    longPressed = false;
+    timer = setTimeout(() => { longPressed = true; openSheet(iso); }, 450);
+  });
+  const cancel = () => clearTimeout(timer);
+  cell.addEventListener('pointerup', cancel);
+  cell.addEventListener('pointerleave', cancel);
+  cell.addEventListener('pointercancel', cancel);
+  cell.addEventListener('click', () => {
+    if (longPressed) { longPressed = false; return; }
+    if (myDates.has(iso)) myDates.delete(iso); else myDates.add(iso);
+    markDirty();
+    render();
+  });
+  cell.addEventListener('contextmenu', e => e.preventDefault());
+}
+
+/* ================= SHEET ================= */
+function openSheet(iso) {
+  const free = freeOn(iso);
+  const inSet = new Set(free);
+  if (myDates.has(iso)) inSet.add(myName);
+  const out = members().filter(n => !inSet.has(n));
+  $('sheetTitle').textContent = prettyDate(iso);
+  $('sheetWho').innerHTML = inSet.size
+    ? [...inSet].map(n => `<div class="row"><span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}</div>`).join('')
+    : '<div class="nobody">Nobody has picked this night yet.</div>';
+  $('sheetOut').textContent = out.length ? `Not free: ${out.join(', ')}` : '';
+  $('sheet').classList.add('open');
+  $('scrim').classList.add('open');
+}
+function closeSheet() {
+  $('sheet').classList.remove('open');
+  $('scrim').classList.remove('open');
+}
+
+/* ================= STATUS ================= */
+let statusTimer = null;
+function showStatus(msg, cls) {
+  const el = $('status');
+  el.textContent = msg;
+  el.className = 'show' + (cls ? ' ' + cls : '');
+}
+function flashStatus(msg, cls, ms = 1800) {
+  showStatus(msg, cls);
+  clearTimeout(statusTimer);
+  statusTimer = setTimeout(() => $('status').classList.remove('show'), ms);
+}
+
+/* ================= BOOT ================= */
+function enterApp() {
+  $('welcome').style.display = 'none';
+  $('app').hidden = false;
+  render();
+  load({ quiet: true });
+}
+$('nameForm').addEventListener('submit', e => {
+  e.preventDefault();
+  let name = $('nameInput').value.trim().replace(/\s+/g, ' ');
+  if (!name) return;
+  const existing = Object.keys(data.availability).find(n => n.toLowerCase() === name.toLowerCase());
+  if (existing) name = existing; // "mike" and "Mike" are the same guy
+  myName = name;
+  localStorage.setItem('mn_name', myName);
+  if (!data.availability[myName]) data.availability[myName] = [];
+  myDates = new Set(data.availability[myName]);
+  enterApp();
+});
+$('userChip').addEventListener('click', () => {
+  if (!confirm('Switch to a different name?')) return;
+  localStorage.removeItem('mn_name');
+  location.reload();
+});
+$('movieEditBtn').addEventListener('click', () => {
+  $('movieInput').value = (data.movie && data.movie.title) || '';
+  $('movieEdit').classList.add('open');
+  $('movieInput').focus();
+});
+$('movieCancel').addEventListener('click', () => $('movieEdit').classList.remove('open'));
+$('movieSave').addEventListener('click', () => {
+  const title = $('movieInput').value.trim();
+  $('movieEdit').classList.remove('open');
+  const movie = { title, setBy: myName, updatedAt: new Date().toISOString() };
+  data.movie = movie;
+  render();
+  save({ movie });
+});
+$('saveBtn').addEventListener('click', () => save());
+$('bestCard').addEventListener('click', () => openSheet($('bestCard').dataset.date));
+$('scrim').addEventListener('click', closeSheet);
+
+setInterval(() => { if (!document.hidden && !dirty && !saving) load({ quiet: true }); }, CONFIG.POLL_MS);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && myName && !dirty && !saving) load({ quiet: true });
+});
+
+(async function init() {
+  // Pre-load data so the welcome screen can match "mike" to an existing "Mike"
+  try { data = pruneOld(await apiGet()); } catch (e) { /* welcome still works offline */ }
+  if (myName) {
+    myDates = new Set(data.availability[myName] || []);
+    enterApp();
+  }
+})();
+</script>
+</body>
+</html>
