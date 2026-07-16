@@ -313,11 +313,32 @@ const pad = n => String(n).padStart(2, '0');
 const isoOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const todayIso = () => isoOf(new Date());
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function colorOf(name) {
+function hashIdx(name) {
   let h = 0;
   for (const ch of name.toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return PALETTE[h % PALETTE.length];
+  return h % PALETTE.length;
 }
+/* Group-wide color assignment: names are sorted deterministically, each takes
+   its hash slot or probes to the next free one — so no two members share a
+   color (up to 8 people), and every device computes the same result. */
+let colorMap = {};
+function assignColors() {
+  const names = [...new Set([...Object.keys(data.availability), myName].filter(Boolean))]
+    .sort((a, b) => { const x = a.toLowerCase(), y = b.toLowerCase(); return x < y ? -1 : x > y ? 1 : 0; });
+  const used = new Set();
+  colorMap = {};
+  for (const n of names) {
+    const start = hashIdx(n);
+    let slot = start;
+    for (let k = 0; k < PALETTE.length; k++) {
+      const s = (start + k) % PALETTE.length;
+      if (!used.has(s)) { slot = s; break; }
+    }
+    used.add(slot);
+    colorMap[n] = PALETTE[slot];
+  }
+}
+function colorOf(name) { return colorMap[name] || PALETTE[hashIdx(name)]; }
 function prettyDate(iso) {
   const [y,m,d] = iso.split('-').map(Number);
   return new Date(y, m-1, d).toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
@@ -405,6 +426,7 @@ async function save(extra) {
 
 /* ================= RENDER ================= */
 function render() {
+  assignColors();
   renderUser(); renderMovie(); renderBest(); renderLegend(); renderMonths();
 }
 function renderUser() {
