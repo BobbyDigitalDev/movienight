@@ -499,9 +499,11 @@ function assignColors() {
   }
 }
 function colorOf(name) { return colorMap[name] || PALETTE[hashIdx(name)]; }
-function prettyDate(iso) {
+function prettyDate(iso, opts = {}) {
   const [y,m,d] = iso.split('-').map(Number);
-  return new Date(y, m-1, d).toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
+  const fmt = { weekday:'short', month:'short', day:'numeric' };
+  if (opts.year) fmt.year = 'numeric';
+  return new Date(y, m-1, d).toLocaleDateString(undefined, fmt);
 }
 function members() { return Object.keys(data.availability).sort((a,b) => a.localeCompare(b)); }
 function isHost() { return !!myName && myName.toLowerCase() === CONFIG.HOST_NAME.toLowerCase(); }
@@ -798,7 +800,7 @@ function renderHistory() {
       ${poster}
       <div class="h-body">
         <div class="h-title">${esc(h.movie || 'Movie TBD')}</div>
-        <div class="h-sub">${esc(prettyDate(h.date))}${bits.length ? ' · ' + bits.join(' · ') : ''}</div>
+        <div class="h-sub">${esc(prettyDate(h.date, { year: true }))}${bits.length ? ' · ' + bits.join(' · ') : ''}</div>
         ${who ? `<div class="h-who">🎟️ ${who}</div>` : ''}
       </div>
     </div>`;
