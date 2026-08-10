@@ -235,6 +235,16 @@
   .day .dots { position: absolute; bottom: 4px; display: flex; gap: 3px; }
   .day .dots i { width: 5px; height: 5px; border-radius: 50%; }
 
+  /* ---------- New round ---------- */
+  #newRoundBtn {
+    display: block; width: 100%; margin: 18px 0 4px; padding: 14px;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--panel); color: var(--muted); font-family: inherit;
+    font-weight: 700; font-size: 14px; cursor: pointer; text-align: center;
+    transition: border-color .2s, color .2s, transform .15s;
+  }
+  #newRoundBtn:active { border-color: var(--violet); color: var(--text); transform: scale(.98); }
+
   /* ---------- Save bar ---------- */
   #saveBar {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 45;
@@ -385,6 +395,7 @@
   <div id="legend"></div>
   <button id="clearBtn" hidden>✕ Sitting this one out? Clear my nights</button>
   <div id="months"></div>
+  <button id="newRoundBtn">🎬 New Movie Night — clear the board</button>
 </div>
 
 <div id="saveBar"><button id="saveBtn">💾 Save my nights</button></div>
@@ -569,6 +580,39 @@ async function save(extra) {
     flashStatus(`Couldn't save (${e.message})`, 'err', 6000);
   } finally {
     saving = false;
+  }
+}
+/* Manual full board reset — any member can start a fresh round (e.g. whoever's
+   organizing/buying tickets this time) instead of waiting for the automatic
+   post-event reset. Same wipe as maybeReset(): movie, theater, showtime,
+   lock, and everyone's picks. */
+async function startNewRound() {
+  const btn = $('newRoundBtn');
+  btn.disabled = true;
+  const prevText = btn.textContent;
+  btn.textContent = 'Clearing…';
+  try {
+    const fresh = pruneOld(await apiGet());
+    fresh.availability = {};
+    fresh.movie = { title: '', setBy: '', updatedAt: '' };
+    fresh.lockedDate = '';
+    fresh.theater = '';
+    fresh.showtime = '';
+    fresh.updatedAt = new Date().toISOString();
+    await new Promise(res => setTimeout(res, CONFIG.PUT_DELAY));
+    await apiPut(fresh);
+    data = fresh;
+    myDates = new Set();
+    dirty = false;
+    filterName = null;
+    $('saveBar').classList.remove('show');
+    render();
+    flashStatus('🎬 New round started — board is clear!', 'ok', 3500);
+  } catch (e) {
+    flashStatus(`Couldn't start new round (${e.message})`, 'err', 6000);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = prevText;
   }
 }
 
@@ -947,6 +991,11 @@ $('clearBtn').addEventListener('click', () => {
   myDates.clear();
   markDirty();
   render();
+});
+$('newRoundBtn').addEventListener('click', () => {
+  if (!confirm("Start a new movie night? This clears the current movie, theater, showtime, and lock, AND everyone's picked nights — the whole group starts fresh.")) return;
+  if (!confirm("Hey you're resetting the Movie Night app. Are you really sure?")) return;
+  startNewRound();
 });
 $('lockConfirm').addEventListener('click', () => {
   const iso = $('lockConfirm').dataset.date;
