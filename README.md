@@ -17,6 +17,7 @@ The whole thing is one `index.html` — no framework, no build step, no server. 
 - **Add to calendar** — once locked, everyone gets an .ics download and a Google Calendar link generated right in the browser
 - **Auto-reset** — the morning after the locked night, the board wipes itself clean for the next round
 - **New Movie Night button** — anyone can wipe the board on demand (movie, theater, showtime, lock, and everyone's picks) to kick off the next round early, e.g. whoever's organizing this time
+- **🎞️ Movie Night History** — every locked night gets automatically archived (movie, poster, date, theater, showtime, who went) before the board wipes, so you never lose the group's history; optionally add a poster image URL when you set the movie
 - **Sit one out** — a "clear my nights" link empties all your picks in one tap (with confirmation) if you can't make this round
 - **Host member removal** — the host sees a ✕ on each name chip to remove someone entirely (stray testers, departed members); anyone removed can rejoin just by entering their name again
 - **Safe concurrent saves** — saving re-fetches and merges, so two people saving at once can't wipe each other out
@@ -28,7 +29,7 @@ The whole thing is one `index.html` — no framework, no build step, no server. 
 1. Make a free account at [jsonbin.io](https://jsonbin.io)
 2. Create a bin containing exactly:
    ```json
-   { "movie": { "title": "", "setBy": "", "updatedAt": "" }, "availability": {}, "updatedAt": "" }
+   { "movie": { "title": "", "poster": "", "setBy": "", "updatedAt": "" }, "availability": {}, "history": [], "updatedAt": "" }
    ```
 3. Note the **Bin ID** (shown in the bin's URL/header)
 4. Under API Keys, create an **Access Key** with only **Bins: Read + Update** permissions. Use an access key, *not* your master key — this key ships in your page source, so it should only be able to read/update this one thing. You can rotate it from the dashboard anytime.
@@ -61,23 +62,27 @@ Text the link to your group. Done.
 1. Open the link, enter your name once
 2. Tap the evenings you're free, then hit **💾 Save my nights**
 3. Hold a day to see who's in; watch the **Best Night** card find your date
-4. Set the movie, theater, and showtime with the ✏️ on the Now Showing card (anyone can, anytime)
+4. Set the movie, poster URL, theater, and showtime with the ✏️ on the Now Showing card (anyone can, anytime)
 5. The host taps a best night to lock it in — everyone gets the official banner and can add it to their calendar
+6. Whenever the board resets — automatically the morning after, or by tapping **New Movie Night** — that night gets saved to the **Movie Night History** log below the calendars first
 
 ## Data model
 
 ```json
 {
-  "movie":        { "title": "…", "setBy": "…", "updatedAt": "…" },
+  "movie":        { "title": "…", "poster": "…", "setBy": "…", "updatedAt": "…" },
   "availability": { "alex": ["2026-07-24", "2026-08-07"] },
   "lockedDate":   "2026-08-07",
   "theater":      "AMC Empire 25",
   "showtime":     "7:45 PM",
+  "history": [
+    { "date": "2026-07-10", "movie": "…", "poster": "…", "theater": "…", "showtime": "…", "attendees": ["alex", "sam"] }
+  ],
   "updatedAt":    "…"
 }
 ```
 
-When `lockedDate` is set, everyone sees the official-night banner. Once that date passes, the first person to open the page clears the board (picks, movie, and lock) for the next round.
+When `lockedDate` is set, everyone sees the official-night banner. Once that date passes, the first person to open the page clears the board (picks, movie, and lock) for the next round — but first, that night (movie, poster, theater, showtime, and who was free that day) gets pushed onto `history` so it's never lost. Tapping **New Movie Night** does the same archive-then-wipe, just on demand instead of waiting for the date to pass. `poster` is just a URL you paste in when you set the movie; leave it blank and the history entry shows a plain placeholder instead.
 
 ## Resetting the board
 

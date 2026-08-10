@@ -92,6 +92,11 @@
 
   #movieCard { display: flex; align-items: center; gap: 12px; }
   #movieCard .marquee { flex: 1; min-width: 0; }
+  .poster-thumb {
+    flex: none; width: 46px; height: 68px; border-radius: 8px; object-fit: cover;
+    background: var(--panel-2); border: 1px solid var(--line);
+  }
+  .poster-thumb.placeholder { display: flex; align-items: center; justify-content: center; font-size: 20px; }
   #movieCard .title { font-size: 19px; font-weight: 700; margin-top: 3px; overflow-wrap: break-word; }
   #movieCard .title.empty { color: var(--muted); font-weight: 400; font-style: italic; }
   #movieCard .byline { font-size: 12px; color: var(--muted); margin-top: 2px; }
@@ -235,6 +240,16 @@
   .day .dots { position: absolute; bottom: 4px; display: flex; gap: 3px; }
   .day .dots i { width: 5px; height: 5px; border-radius: 50%; }
 
+  /* ---------- History ---------- */
+  #historyCard { margin-top: 18px; }
+  .history-item { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+  .history-item:first-child { border-top: none; padding-top: 4px; }
+  .history-item .h-body { flex: 1; min-width: 0; }
+  .history-item .h-title { font-size: 15px; font-weight: 700; overflow-wrap: break-word; }
+  .history-item .h-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .history-item .h-who { font-size: 12px; color: var(--muted); margin-top: 4px; overflow-wrap: break-word; }
+  .history-empty { color: var(--muted); font-size: 14px; padding: 4px 0; }
+
   /* ---------- New round ---------- */
   #newRoundBtn {
     display: block; width: 100%; margin: 18px 0 4px; padding: 14px;
@@ -342,12 +357,14 @@
   </header>
 
   <div class="card" id="movieCard">
+    <img id="moviePoster" class="poster-thumb" alt="" hidden>
     <div class="marquee">
       <div class="label">Now Showing</div>
       <div class="title empty" id="movieTitle">No movie picked yet</div>
       <div class="byline" id="movieByline"></div>
       <div id="movieEdit">
         <input id="movieInput" type="text" maxlength="60" placeholder="Movie title">
+        <input id="moviePosterInput" type="url" maxlength="300" placeholder="Poster image URL (optional)">
         <input id="movieTheaterInput" type="text" maxlength="60" placeholder="Theater (optional)">
         <input id="movieShowtimeInput" type="text" maxlength="30" placeholder="Showtime (optional — e.g. 7:45 PM)">
         <div class="btns">
@@ -395,6 +412,12 @@
   <div id="legend"></div>
   <button id="clearBtn" hidden>✕ Sitting this one out? Clear my nights</button>
   <div id="months"></div>
+
+  <div class="card" id="historyCard">
+    <div class="label">🎞️ Movie Night History</div>
+    <div id="historyList"></div>
+  </div>
+
   <button id="newRoundBtn">🎬 New Movie Night — clear the board</button>
 </div>
 
@@ -414,6 +437,7 @@
   <div class="who" id="lockWho"></div>
   <div class="out" id="lockOut"></div>
   <input id="lockMovie" type="text" maxlength="60" placeholder="Movie title (optional — set it now or later)">
+  <input id="lockPoster" type="url" maxlength="300" placeholder="Poster image URL (optional)">
   <input id="lockTheater" type="text" maxlength="60" placeholder="Theater (optional)">
   <input id="lockShowtime" type="text" maxlength="30" placeholder="Showtime (optional — e.g. 7:45 PM)">
   <button id="lockConfirm">Lock it in 🎬 — this is movie night</button>
@@ -436,7 +460,7 @@ const PALETTE = ['#ff2d95','#22d3ee','#a3e635','#ffb020','#8b5cf6','#f43f5e','#1
 
 /* ================= STATE ================= */
 let myName = localStorage.getItem('mn_name') || '';
-let data = { movie: { title:'', setBy:'', updatedAt:'' }, availability: {}, lockedDate: '', theater: '', showtime: '', updatedAt: '' };
+let data = { movie: { title:'', poster:'', setBy:'', updatedAt:'' }, availability: {}, lockedDate: '', theater: '', showtime: '', history: [], updatedAt: '' };
 let myDates = new Set();
 let dirty = false;        // unsaved local calendar changes
 let saving = false;
@@ -482,6 +506,14 @@ function prettyDate(iso) {
 function members() { return Object.keys(data.availability).sort((a,b) => a.localeCompare(b)); }
 function isHost() { return !!myName && myName.toLowerCase() === CONFIG.HOST_NAME.toLowerCase(); }
 function freeOn(iso) { return members().filter(n => (data.availability[n] || []).includes(iso)); }
+/* Same as freeOn(), but works against an arbitrary record — used when archiving
+   a night to history, where the record being written isn't necessarily the
+   global `data` yet. */
+function attendeesForRecord(record, iso) {
+  return Object.keys(record.availability || {})
+    .filter(n => (record.availability[n] || []).includes(iso))
+    .sort((a, b) => a.localeCompare(b));
+}
 
 /* ================= API ================= */
 async function describeError(r) {
@@ -508,6 +540,7 @@ function pruneOld(record) {
   for (const n of Object.keys(record.availability)) {
     record.availability[n] = (record.availability[n] || []).filter(d => d >= t);
   }
+  record.history = record.history || [];   // older bins won't have this field yet
   return record;
 }
 
@@ -516,8 +549,17 @@ function pruneOld(record) {
    clears the board for the next round. */
 async function maybeReset(record) {
   if (!record.lockedDate || record.lockedDate >= todayIso()) return record;
+  record.history = record.history || [];
+  record.history.unshift({
+    date: record.lockedDate,
+    movie: (record.movie && record.movie.title) || '',
+    poster: (record.movie && record.movie.poster) || '',
+    theater: record.theater || '',
+    showtime: record.showtime || '',
+    attendees: attendeesForRecord(record, record.lockedDate)
+  });
   record.availability = {};
-  record.movie = { title: '', setBy: '', updatedAt: '' };
+  record.movie = { title: '', poster: '', setBy: '', updatedAt: '' };
   record.lockedDate = '';
   record.theater = '';
   record.showtime = '';
@@ -532,7 +574,9 @@ async function maybeReset(record) {
 }
 async function load({ quiet } = {}) {
   try {
-    const fresh = await maybeReset(pruneOld(await apiGet()));
+    // maybeReset must see the raw (unpruned) availability so it can capture who
+    // was actually free on the locked date before pruneOld strips past dates.
+    const fresh = pruneOld(await maybeReset(await apiGet()));
     data = fresh;
     if (!dirty) myDates = new Set(data.availability[myName] || []);
     else data.availability[myName] = [...myDates].sort();
@@ -592,9 +636,23 @@ async function startNewRound() {
   const prevText = btn.textContent;
   btn.textContent = 'Clearing…';
   try {
-    const fresh = pruneOld(await apiGet());
+    // Read the raw (unpruned) record so attendeesForRecord can still see picks
+    // on the locked date even if that date is already in the past.
+    const raw = await apiGet();
+    if (raw.lockedDate) {
+      raw.history = raw.history || [];
+      raw.history.unshift({
+        date: raw.lockedDate,
+        movie: (raw.movie && raw.movie.title) || '',
+        poster: (raw.movie && raw.movie.poster) || '',
+        theater: raw.theater || '',
+        showtime: raw.showtime || '',
+        attendees: attendeesForRecord(raw, raw.lockedDate)
+      });
+    }
+    const fresh = pruneOld(raw);
     fresh.availability = {};
-    fresh.movie = { title: '', setBy: '', updatedAt: '' };
+    fresh.movie = { title: '', poster: '', setBy: '', updatedAt: '' };
     fresh.lockedDate = '';
     fresh.theater = '';
     fresh.showtime = '';
@@ -619,7 +677,7 @@ async function startNewRound() {
 /* ================= RENDER ================= */
 function render() {
   assignColors();
-  renderUser(); renderMovie(); renderLocked(); renderBest(); renderLegend(); renderMonths();
+  renderUser(); renderMovie(); renderLocked(); renderBest(); renderLegend(); renderMonths(); renderHistory();
   $('clearBtn').hidden = myDates.size === 0;
 }
 function renderLocked() {
@@ -711,6 +769,40 @@ function renderMovie() {
   if (data.theater) bits.push(`📍 ${data.theater}`);
   if (data.showtime) bits.push(data.showtime);
   $('movieByline').textContent = bits.join(' · ');
+  const posterEl = $('moviePoster');
+  const posterUrl = data.movie && data.movie.poster;
+  if (posterUrl) {
+    posterEl.src = posterUrl;
+    posterEl.hidden = false;
+  } else {
+    posterEl.hidden = true;
+    posterEl.removeAttribute('src');
+  }
+}
+function renderHistory() {
+  const holder = $('historyList');
+  const hist = data.history || [];
+  if (!hist.length) {
+    holder.innerHTML = '<div class="history-empty">No past nights yet — this fills in automatically once a movie night wraps up.</div>';
+    return;
+  }
+  holder.innerHTML = hist.map(h => {
+    const bits = [];
+    if (h.theater) bits.push(`📍 ${esc(h.theater)}`);
+    if (h.showtime) bits.push(esc(h.showtime));
+    const who = (h.attendees && h.attendees.length) ? h.attendees.map(esc).join(', ') : '';
+    const poster = h.poster
+      ? `<img class="poster-thumb" src="${esc(h.poster)}" alt="" loading="lazy" onerror="this.hidden=true">`
+      : `<div class="poster-thumb placeholder">🎬</div>`;
+    return `<div class="history-item">
+      ${poster}
+      <div class="h-body">
+        <div class="h-title">${esc(h.movie || 'Movie TBD')}</div>
+        <div class="h-sub">${esc(prettyDate(h.date))}${bits.length ? ' · ' + bits.join(' · ') : ''}</div>
+        ${who ? `<div class="h-who">🎟️ ${who}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
 }
 function bestNights() {
   const counts = {};
@@ -759,6 +851,7 @@ function openLockSheet(iso) {
     : '<div class="nobody">Nobody has picked this night yet.</div>';
   $('lockOut').textContent = out.length ? `Can't make it: ${out.join(', ')}` : 'Everyone can make it 🎉';
   $('lockMovie').value = (data.movie && data.movie.title) || '';
+  $('lockPoster').value = (data.movie && data.movie.poster) || '';
   $('lockTheater').value = data.theater || '';
   $('lockShowtime').value = data.showtime || '';
   $('lockConfirm').dataset.date = iso;
@@ -939,6 +1032,7 @@ $('userChip').addEventListener('click', () => {
 });
 $('movieEditBtn').addEventListener('click', () => {
   $('movieInput').value = (data.movie && data.movie.title) || '';
+  $('moviePosterInput').value = (data.movie && data.movie.poster) || '';
   $('movieTheaterInput').value = data.theater || '';
   $('movieShowtimeInput').value = data.showtime || '';
   $('movieEdit').classList.add('open');
@@ -947,12 +1041,15 @@ $('movieEditBtn').addEventListener('click', () => {
 $('movieCancel').addEventListener('click', () => $('movieEdit').classList.remove('open'));
 $('movieSave').addEventListener('click', () => {
   const title = $('movieInput').value.trim();
+  const poster = $('moviePosterInput').value.trim();
   const theater = $('movieTheaterInput').value.trim();
   const showtime = $('movieShowtimeInput').value.trim();
   $('movieEdit').classList.remove('open');
   const extra = { theater, showtime };
-  if (title !== ((data.movie && data.movie.title) || '')) {
-    extra.movie = { title, setBy: myName, updatedAt: new Date().toISOString() };
+  const prevTitle = (data.movie && data.movie.title) || '';
+  const prevPoster = (data.movie && data.movie.poster) || '';
+  if (title !== prevTitle || poster !== prevPoster) {
+    extra.movie = { title, poster, setBy: myName, updatedAt: new Date().toISOString() };
     data.movie = extra.movie;
   }
   data.theater = theater;
@@ -1000,9 +1097,12 @@ $('newRoundBtn').addEventListener('click', () => {
 $('lockConfirm').addEventListener('click', () => {
   const iso = $('lockConfirm').dataset.date;
   const title = $('lockMovie').value.trim();
+  const poster = $('lockPoster').value.trim();
   const extra = { lock: iso, theater: $('lockTheater').value.trim(), showtime: $('lockShowtime').value.trim() };
-  if (title && title !== (data.movie && data.movie.title)) {
-    extra.movie = { title, setBy: myName, updatedAt: new Date().toISOString() };
+  const prevTitle = (data.movie && data.movie.title) || '';
+  const prevPoster = (data.movie && data.movie.poster) || '';
+  if ((title && title !== prevTitle) || poster !== prevPoster) {
+    extra.movie = { title: title || prevTitle, poster, setBy: myName, updatedAt: new Date().toISOString() };
     data.movie = extra.movie;
   }
   data.lockedDate = iso;
