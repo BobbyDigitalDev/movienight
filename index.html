@@ -792,7 +792,12 @@ function renderHistory() {
     const bits = [];
     if (h.theater) bits.push(`📍 ${esc(h.theater)}`);
     if (h.showtime) bits.push(esc(h.showtime));
-    const who = (h.attendees && h.attendees.length) ? h.attendees.map(esc).join(', ') : '';
+    // Always alphabetize for display, regardless of storage order — keeps
+    // it neutral no matter how an entry was created (auto-archived or
+    // hand-added via the JSONBin dashboard).
+    const who = (h.attendees && h.attendees.length)
+      ? h.attendees.slice().sort((a, b) => a.localeCompare(b)).map(esc).join(', ')
+      : '';
     const poster = h.poster
       ? `<img class="poster-thumb" src="${esc(h.poster)}" alt="" loading="lazy" onerror="this.hidden=true">`
       : `<div class="poster-thumb placeholder">🎬</div>`;
