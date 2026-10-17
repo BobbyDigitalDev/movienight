@@ -8,7 +8,7 @@ There are no automated tests. Test by hand in a phone-sized viewport (about 390 
 
 1. In the JSONBin dashboard, create a second bin with the starter JSON:
    ```json
-   { "movie": { "title": "", "poster": "", "setBy": "", "updatedAt": "" }, "availability": {}, "history": [], "updatedAt": "" }
+   { "outings": [], "history": [], "updatedAt": "" }
    ```
 2. Give the existing Access Key access to it (or make a test key with Bins Read + Update).
 3. Temporarily change `CONFIG.BIN_ID` (and `ACCESS_KEY` if different) in your local copy.
@@ -44,10 +44,20 @@ Two browser profiles (or one normal + one private window) give you two users. Gi
 - [ ] Pencil edits title, poster URL, theater, showtime; byline shows "picked by"
 - [ ] A broken poster URL doesn't break the layout
 
+### Multiple outings
+- [ ] An old single-outing bin shows as one outing with its movie, picks, and lock intact, and a plain page load doesn't write
+- [ ] ➕ Add another movie outing creates a second section below with its movie form open; "Outing 1 of 2" headers appear
+- [ ] Picks, movie details, Best Night, and lock are independent per outing; one Save button saves picks from several outings
+- [ ] The legend is shared; filtering by a person dims days in every outing
+- [ ] Creator sees Cancel on their own outing but not on others; host sees it on all; a lone blank outing shows no Cancel
+- [ ] Cancelling asks twice, removes the outing, and does not add it to History; cancelling the last outing leaves a blank one
+- [ ] If someone else cancels an outing while you have unsaved picks in it, saving doesn't bring it back and tells you
+- [ ] An open movie edit form keeps what you typed through a background refresh
+
 ### Host (name = `CONFIG.HOST_NAME`)
 - [ ] Best Night shows 🔓 pills; tapping one opens the lock sheet; Lock it in shows the official banner for everyone
 - [ ] Holding a future day offers Lock; holding the locked day offers Unlock
-- [ ] ✕ on another member's chip removes them after confirm
+- [ ] ✕ on another member's chip removes them from every outing after confirm
 - [ ] Non-host users see none of these controls
 
 ### Official night
@@ -56,8 +66,8 @@ Two browser profiles (or one normal + one private window) give you two users. Gi
 - [ ] Google Calendar link opens with the right date and time
 
 ### Resets and history
-- [ ] With a past `lockedDate` in the bin, loading the page archives that night to History (with attendees) and clears the board
-- [ ] New Movie Night asks twice, archives the locked night if there is one, and clears the board
+- [ ] With a past `lockedDate` on one outing, loading the page archives that outing to History (with attendees) and removes it; other outings are untouched
+- [ ] If that was the only outing, a fresh blank outing appears
 - [ ] History entries show year, poster or 🎬 placeholder, alphabetical attendees
 
 ### Resilience

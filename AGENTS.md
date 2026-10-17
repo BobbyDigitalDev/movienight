@@ -4,7 +4,7 @@ Guide for any AI assistant (or person) working on this project, whether you are 
 
 ## What this is
 
-Movie Night is a single-page scheduling app for a small group of friends. Each person enters a name, taps the evenings they are free on a rolling four-month calendar, and the app highlights the night the most people can make. A host locks in the official night; everyone sees the date, movie, theater, and showtime and can add it to their calendar. Locked nights are archived to a history log when the board resets.
+Movie Night is a single-page scheduling app for a small group of friends. The group can run several movie outings at once; each outing is its own board on the page with its own movie details and rolling four-month calendar. Each person enters a name once, taps the evenings they are free for an outing, and the app highlights the night the most people can make. A host locks in each outing's night; everyone sees the date, movie, theater, and showtime and can add it to their calendar. The morning after, that outing moves to a history log.
 
 - **Stack:** one `index.html` (inline CSS + vanilla JS, no framework, no build step). Shared data lives in one JSONBin.io bin.
 - **Hosting:** GitHub Pages, deploy from branch `main` / root. See `README.md` for setup.
@@ -36,7 +36,7 @@ The `CONFIG` block at the top of the `<script>` in `index.html` ships with the *
 4. **Every write is read-merge-write.** Any code that changes the bin must `apiGet()` fresh, apply only its own change, then `apiPut()`. Never PUT the in-memory `data` object directly. This is what stops two people from wiping each other out.
 5. **Respect the free tier: 1 request/second.** Keep the `CONFIG.PUT_DELAY` (1100 ms) gap between the GET and PUT of a write. Do not shorten `POLL_MS` (45 s) without reason.
 6. **The live bin is real group data.** Do not write test data to it, reset it, or change its shape without the owner's approval. For destructive or schema changes, show what will change first, make one test change, verify it, and keep a before/after copy of the bin JSON so it can be restored. See `TESTING.md` for using a separate test bin.
-7. **Schema changes must be backward compatible.** Existing bins may be missing newer fields (`history`, `poster`, `lockedDate`, `theater`, `showtime`). Default missing fields when reading (see `pruneOld()`), and update the data model in `README.md` and `ARCHITECTURE.md`.
+7. **Schema changes must be backward compatible.** Existing bins may be in the older single-outing shape or missing newer fields. All reads go through `normalize()`; extend it rather than reading raw fields, and update the data model in `README.md` and `ARCHITECTURE.md`.
 8. **Escape user text.** Names, titles, theater, showtime, and poster URLs are free text from anyone. Use `esc()` for anything put in `innerHTML`, or use `textContent`.
 9. **Keep committed docs generic.** The repo is public and meant to be cloned. Anything specific to one deployment (people, URLs, plans, status) goes in the gitignored `STATUS.md`, not in `README.md` or these docs.
 10. **Pushing to `main` is deploying.** GitHub Pages publishes `main` within a minute or two. Only push when the owner asks.
@@ -50,7 +50,7 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
-A local preview still talks to whatever bin `CONFIG.BIN_ID` points at. Read-only browsing is fine; Save, lock, remove member, and New Movie Night change real data. Use a test bin for anything that writes (see `TESTING.md`).
+A local preview still talks to whatever bin `CONFIG.BIN_ID` points at. Read-only browsing is fine; Save, lock, add or cancel an outing, and remove member all change real data. Use a test bin for anything that writes (see `TESTING.md`).
 
 1. Read `STATUS.md` (if present) and confirm with the owner what this session is for.
 2. Make the change in `index.html`, following the patterns in `ARCHITECTURE.md`.

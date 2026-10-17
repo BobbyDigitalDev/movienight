@@ -6,20 +6,21 @@ The whole thing is one `index.html` — no framework, no build step, no server. 
 
 ## Features
 
+- **Several movie outings at once** — tap **➕ Add another movie outing** and a second board appears below the first, with its own Now Showing details, calendar, Best Night, and lock-in. Each outing is self-contained, so nobody has to untangle two movies on one calendar
 - **Four-month rolling calendar** — always shows this month and the next three (change `MONTHS` in `CONFIG`); past days prune themselves automatically, so it rolls forward after every movie night with zero maintenance
 - **No accounts** — everyone just types a name once; it's remembered on their device ("mike" and "Mike" are matched, so no duplicate people)
 - **Per-person colors** — your picks glow in your color; everyone else shows up as count badges and colored dots
 - **🏆 Best Night card** — automatically surfaces the date(s) with the most overlap
 - **Who's in?** — hold any day to see the names; tap a name chip to spotlight one person's availability
-- **Now Showing card** — anyone can set the movie you're all going to see
-- **Host lock-in** — the host taps a best night and locks it; everyone sees an "🎬 It's Official" banner with the date, movie, theater, showtime, and who's going
+- **Now Showing card** — anyone can set the movie for each outing
+- **Host lock-in** — the host taps an outing's best night and locks it; everyone sees an "🎬 It's Official" banner with the date, movie, theater, showtime, and who's going
 - **Theater & showtime** — anyone can set or update them (whoever buys the tickets fills them in)
 - **Add to calendar** — once locked, everyone gets an .ics download and a Google Calendar link generated right in the browser
-- **Auto-reset** — the morning after the locked night, the board wipes itself clean for the next round
-- **New Movie Night button** — anyone can wipe the board on demand (movie, theater, showtime, lock, and everyone's picks) to kick off the next round early, e.g. whoever's organizing this time
-- **🎞️ Movie Night History** — every locked night gets automatically archived (movie, poster, date, theater, showtime, who went) before the board wipes, so you never lose the group's history; optionally add a poster image URL when you set the movie
-- **Sit one out** — a "clear my nights" link empties all your picks in one tap (with confirmation) if you can't make this round
-- **Host member removal** — the host sees a ✕ on each name chip to remove someone entirely (stray testers, departed members); anyone removed can rejoin just by entering their name again
+- **Auto-wrap** — the morning after an outing's locked night, that outing moves to History and disappears from the page; the others stay put. If it was the only one, a fresh blank outing takes its place
+- **Cancel an outing** — the host, or whoever added the outing, can delete it (two confirmations). Cancelled outings never happened, so they don't go into History
+- **🎞️ Movie Night History** — every locked night gets automatically archived (movie, poster, date, theater, showtime, who was free that night) when it wraps, so you never lose the group's history; optionally add a poster image URL when you set the movie
+- **Sit one out** — a "clear my nights" link empties all your picks for one outing in one tap (with confirmation) if you can't make it
+- **Host member removal** — the host sees a ✕ on each name chip to remove someone from every outing (stray testers, departed members); anyone removed can rejoin just by entering their name again
 - **Safe concurrent saves** — saving re-fetches and merges, so two people saving at once can't wipe each other out
 
 ## Setup (~15 minutes)
@@ -29,8 +30,9 @@ The whole thing is one `index.html` — no framework, no build step, no server. 
 1. Make a free account at [jsonbin.io](https://jsonbin.io)
 2. Create a bin containing exactly:
    ```json
-   { "movie": { "title": "", "poster": "", "setBy": "", "updatedAt": "" }, "availability": {}, "history": [], "updatedAt": "" }
+   { "outings": [], "history": [], "updatedAt": "" }
    ```
+   (The app fills in the first outing itself. A bin made with the older starter JSON, with top-level `movie` and `availability`, also works.)
 3. Note the **Bin ID** (shown in the bin's URL/header)
 4. Under API Keys, create an **Access Key** with only **Bins: Read + Update** permissions. Use an access key, *not* your master key — this key ships in your page source, so it should only be able to read/update this one thing. You can rotate it from the dashboard anytime.
 
@@ -64,17 +66,25 @@ Text the link to your group. Done.
 3. Hold a day to see who's in; watch the **Best Night** card find your date
 4. Set the movie, poster URL, theater, and showtime with the ✏️ on the Now Showing card (anyone can, anytime)
 5. The host taps a best night to lock it in — everyone gets the official banner and can add it to their calendar
-6. Whenever the board resets — automatically the morning after, or by tapping **New Movie Night** — that night gets saved to the **Movie Night History** log below the calendars first
+6. Want to see a second movie too? Tap **➕ Add another movie outing** at the bottom, set its movie, and pick your nights on its own calendar
+7. The morning after an outing's night, it moves to the **Movie Night History** log automatically
 
 ## Data model
 
 ```json
 {
-  "movie":        { "title": "…", "poster": "…", "setBy": "…", "updatedAt": "…" },
-  "availability": { "alex": ["2026-07-24", "2026-08-07"] },
-  "lockedDate":   "2026-08-07",
-  "theater":      "AMC Empire 25",
-  "showtime":     "7:45 PM",
+  "outings": [
+    {
+      "id":           "o1",
+      "createdBy":    "alex",
+      "createdAt":    "…",
+      "movie":        { "title": "…", "poster": "…", "setBy": "…", "updatedAt": "…" },
+      "availability": { "alex": ["2026-07-24", "2026-08-07"] },
+      "lockedDate":   "2026-08-07",
+      "theater":      "AMC Empire 25",
+      "showtime":     "7:45 PM"
+    }
+  ],
   "history": [
     { "date": "2026-07-10", "movie": "…", "poster": "…", "theater": "…", "showtime": "…", "attendees": ["alex", "sam"] }
   ],
@@ -82,11 +92,11 @@ Text the link to your group. Done.
 }
 ```
 
-When `lockedDate` is set, everyone sees the official-night banner. Once that date passes, the first person to open the page clears the board (picks, movie, and lock) for the next round — but first, that night (movie, poster, theater, showtime, and who was free that day) gets pushed onto `history` so it's never lost. Tapping **New Movie Night** does the same archive-then-wipe, just on demand instead of waiting for the date to pass. `poster` is just a URL you paste in when you set the movie; leave it blank and the history entry shows a plain placeholder instead.
+Each outing is independent. When an outing's `lockedDate` is set, everyone sees the official-night banner on that outing. Once that date passes, the first person to open the page pushes that night (movie, poster, theater, showtime, and who was free that day) onto `history` and removes the outing; if no outings are left, a blank one is created. Bins in the older single-outing shape (top-level `movie`, `availability`, `lockedDate`, `theater`, `showtime`) are converted to `outings[0]` automatically the first time the new version saves. `poster` is just a URL you paste in when you set the movie; leave it blank and the history entry shows a plain placeholder instead.
 
 ## Resetting the board
 
-Normally unnecessary — past dates prune themselves and the movie title just gets overwritten. For a full wipe, open your bin in the JSONBin dashboard and restore the starter JSON from Setup step 1.
+Normally unnecessary — past dates prune themselves and finished outings move to History on their own. For a full wipe, open your bin in the JSONBin dashboard and restore the starter JSON from Setup step 1.
 
 ## Customizing it (or working on it with an AI assistant)
 

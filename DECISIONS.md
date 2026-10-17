@@ -25,13 +25,20 @@ Why things are the way they are. Ask the project owner before reversing any of t
 | Host | Single host by name (`CONFIG.HOST_NAME`), no auth | Originally planned for v2; built on day one. No auth is acceptable for a friend group | 2026-07-16 |
 | Theater/showtime | Anyone can edit, not just the host | Whoever buys the tickets fills them in | 2026-07-16 (ae43867) |
 | Calendar export | .ics download + Google Calendar link, generated in the browser | No server needed | 2026-07-16 (ae43867) |
-| Auto-reset | Morning after the locked night, the first visitor wipes the board | Zero maintenance between rounds | 2026-07-16 |
+| Auto-reset | Morning after the locked night, the first visitor wipes the board | Zero maintenance between rounds | 2026-07-16. Since 2026-10-17 it wraps only that outing (see Multiple outings) |
 | Clear my nights | One tap with a confirm | Sitting a round out shouldn't take many taps | 2026-07-16 (3c11696) |
 | Member removal | Host only, via ✕ on the chip, with confirm. Removed people can rejoin by entering their name | Clean up stray testers or people who left | 2026-07-16 (cbe2632) |
-| New Movie Night | **Anyone** can wipe the board on demand, behind **two** confirms | Whoever is organizing this time can start the next round early | 2026-08-10 (b5c8ab5) |
+| New Movie Night | **Anyone** can wipe the board on demand, behind **two** confirms | Whoever is organizing this time can start the next round early | 2026-08-10 (b5c8ab5). **Replaced 2026-10-17** by per-outing Cancel |
 | History | Every locked night is archived (movie, poster, date, theater, showtime, attendees) before any wipe | Never lose the group's history | 2026-08-10 (3cf1b84) |
 | Posters | Optional pasted image URL, no movie API | No API keys, no lookup service (showtime and theater APIs are out of scope) | 2026-08-10 (3cf1b84) |
 | History dates | Show the year | History persists across years; other dates stay inside the rolling calendar window and don't need it | 2026-08-10 (d6d3255) |
+| Multiple outings | Each outing is a separate board (own movie details, calendar, picks, best night, lock). Not one shared calendar | Owner: two movies on one calendar would be too confusing for the group; separate boards are easiest to follow. Cost accepted: people tap a free night once per outing | 2026-10-17 |
+| Outing layout | Stacked on one page, with a gradient divider and an "Outing 2 of 3" header (header hidden when there's only one) | Owner's choice over tabs or collapsible cards: everything visible | 2026-10-17 |
+| Who adds outings | Anyone, via ➕ Add another movie outing | Matches anyone being able to set the movie | 2026-10-17 |
+| Who cancels outings | The host, or the outing's creator; two confirms; not archived | Stops someone deleting a board others are using | 2026-10-17 |
+| After an outing's night | Archive it to History and remove it; if none left, show a fresh blank outing | Other outings stay untouched. Also removes the old "New Movie Night archives a future night" problem | 2026-10-17 |
+| Members across outings | Shared: one legend, one color map; host removal removes from every outing | Members are derived from all outings' rows, so there's no separate list to keep in sync | 2026-10-17 |
+| Migration | Old single-outing bins become `outings[0]` with fixed id `o1`, on read, written on next save | Every device converts identically; nothing lost; stale old pages fail before writing | 2026-10-17 |
 | History attendee order | Alphabetical at render time | Nobody reads as first or last, however the entry was created | 2026-08-10 (ac5092a) |
 
 ## Out of scope (from the original plan, still true unless the owner decides otherwise)

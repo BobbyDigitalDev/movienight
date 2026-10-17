@@ -23,6 +23,7 @@
     --radius: 16px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  [hidden] { display: none !important; }   /* author display rules must not override hidden */
   html, body { margin: 0; padding: 0; }
   body {
     background: var(--bg);
@@ -90,77 +91,77 @@
   }
   .card .label { font-size: 11px; font-weight: 700; letter-spacing: .18em; color: var(--muted); text-transform: uppercase; }
 
-  #movieCard { display: flex; align-items: center; gap: 12px; }
-  #movieCard .marquee { flex: 1; min-width: 0; }
+  .movie-card { display: flex; align-items: center; gap: 12px; }
+  .movie-card .marquee { flex: 1; min-width: 0; }
   .poster-thumb {
     flex: none; width: 46px; height: 68px; border-radius: 8px; object-fit: cover;
     background: var(--panel-2); border: 1px solid var(--line);
   }
   .poster-thumb.placeholder { display: flex; align-items: center; justify-content: center; font-size: 20px; }
-  #movieCard .title { font-size: 19px; font-weight: 700; margin-top: 3px; overflow-wrap: break-word; }
-  #movieCard .title.empty { color: var(--muted); font-weight: 400; font-style: italic; }
-  #movieCard .byline { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .movie-card .title { font-size: 19px; font-weight: 700; margin-top: 3px; overflow-wrap: break-word; }
+  .movie-card .title.empty { color: var(--muted); font-weight: 400; font-style: italic; }
+  .movie-card .byline { font-size: 12px; color: var(--muted); margin-top: 2px; }
   .icon-btn {
     flex: none; width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--line);
     background: var(--panel-2); color: var(--text); font-size: 16px; cursor: pointer;
   }
-  #movieEdit { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
-  #movieEdit.open { display: flex; }
-  #movieEdit input {
+  .movie-edit { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .movie-edit.open { display: flex; }
+  .movie-edit input {
     width: 100%; box-sizing: border-box; padding: 10px 12px; font-size: 16px; font-family: inherit;
     color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; outline: none;
   }
-  #movieEdit input:focus { border-color: var(--violet); }
-  #movieEdit .btns { display: flex; gap: 8px; }
-  #movieEdit button {
+  .movie-edit input:focus { border-color: var(--violet); }
+  .movie-edit .btns { display: flex; gap: 8px; }
+  .movie-edit button {
     flex: 1; padding: 10px 14px; border: none; border-radius: 10px; font-family: inherit; font-weight: 700;
     cursor: pointer; font-size: 14px;
   }
-  #movieEdit .save { background: var(--grad); color: #fff; }
-  #movieEdit .cancel { background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
+  .movie-edit .save { background: var(--grad); color: #fff; }
+  .movie-edit .cancel { background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
 
-  #lockedCard {
+  .locked-card {
     border: 2px solid transparent;
     background:
       linear-gradient(var(--panel), var(--panel)) padding-box,
       var(--grad) border-box;
     box-shadow: 0 0 24px rgba(255,45,149,.25);
   }
-  #lockedCard .line { font-family: 'Unbounded', sans-serif; font-size: 17px; font-weight: 600; margin-top: 5px; }
-  #lockedCard .sub { font-size: 14px; color: var(--muted); margin-top: 3px; }
-  #lockedWho { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-  #lockedWho .chip { cursor: default; font-size: 13px; padding: 6px 11px; }
-  #lockedOut { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  #lockedHead { display: flex; align-items: center; justify-content: space-between; }
-  #detailsEdit { display: none; flex-direction: column; gap: 8px; margin-top: 12px; }
-  #detailsEdit.open { display: flex; }
-  #detailsEdit input {
+  .locked-card .line { font-family: 'Unbounded', sans-serif; font-size: 17px; font-weight: 600; margin-top: 5px; }
+  .locked-card .sub { font-size: 14px; color: var(--muted); margin-top: 3px; }
+  .locked-who { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .locked-who .chip { cursor: default; font-size: 13px; padding: 6px 11px; }
+  .locked-out { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .locked-head { display: flex; align-items: center; justify-content: space-between; }
+  .details-edit { display: none; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .details-edit.open { display: flex; }
+  .details-edit input {
     width: 100%; padding: 10px 12px; font-size: 15px; font-family: inherit;
     color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; outline: none;
   }
-  #detailsEdit input:focus { border-color: var(--violet); }
-  #detailsEdit .row { display: flex; gap: 8px; }
-  #detailsEdit .row button {
+  .details-edit input:focus { border-color: var(--violet); }
+  .details-edit .row { display: flex; gap: 8px; }
+  .details-edit .row button {
     flex: 1; padding: 10px; border: none; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer;
   }
-  #detailsSave { background: var(--grad); color: #fff; }
-  #detailsCancel { background: var(--panel-2); color: var(--muted); border: 1px solid var(--line) !important; }
-  #calRow { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .details-save { background: var(--grad); color: #fff; }
+  .details-cancel { background: var(--panel-2); color: var(--muted); border: 1px solid var(--line) !important; }
+  .cal-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .cal-btn {
     flex: 1; min-width: 130px; padding: 11px 10px; border-radius: 10px; border: 1px solid var(--line);
     background: var(--panel-2); color: var(--text); font-weight: 600; font-size: 13px; cursor: pointer;
     text-align: center; text-decoration: none; font-family: inherit; display: block;
   }
 
-  #bestCard {
+  .best-card {
     border: 1px solid transparent;
     background:
       linear-gradient(var(--panel), var(--panel)) padding-box,
       var(--grad) border-box;
     cursor: pointer;
   }
-  #bestCard .best-line { font-size: 17px; font-weight: 700; margin-top: 4px; }
-  #bestCard .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .best-card .best-line { font-size: 17px; font-weight: 700; margin-top: 4px; }
+  .best-card .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
   .best-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
   .best-pill {
     display: flex; align-items: center; gap: 8px; padding: 12px 16px;
@@ -192,16 +193,16 @@
   .chip .x:active { color: #fff; background: var(--panel-2); }
   #legend.filtering .chip:not(.active) { opacity: .35; }
 
-  #clearBtn {
+  .clear-btn {
     display: block; margin: -6px 2px 14px; padding: 0; border: none; background: none;
     color: var(--muted); font-family: inherit; font-size: 13px; cursor: pointer; text-decoration: underline;
     text-underline-offset: 3px;
   }
-  #clearBtn:active { color: var(--text); }
+  .clear-btn:active { color: var(--text); }
 
   /* ---------- Calendars ---------- */
-  #months { display: grid; grid-template-columns: 1fr; gap: 18px; }
-  @media (min-width: 860px) { #months { grid-template-columns: 1fr 1fr; align-items: start; } }
+  .months { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  @media (min-width: 860px) { .months { grid-template-columns: 1fr 1fr; align-items: start; } }
   .month { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
   .month h2 {
     font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 600; margin: 2px 4px 12px; letter-spacing: .02em;
@@ -250,15 +251,35 @@
   .history-item .h-who { font-size: 12px; color: var(--muted); margin-top: 4px; overflow-wrap: break-word; }
   .history-empty { color: var(--muted); font-size: 14px; padding: 4px 0; }
 
-  /* ---------- New round ---------- */
-  #newRoundBtn {
+  /* ---------- Wide buttons (add / cancel outing) ---------- */
+  .wide-btn {
     display: block; width: 100%; margin: 18px 0 4px; padding: 14px;
     border: 1px solid var(--line); border-radius: var(--radius);
     background: var(--panel); color: var(--muted); font-family: inherit;
     font-weight: 700; font-size: 14px; cursor: pointer; text-align: center;
     transition: border-color .2s, color .2s, transform .15s;
   }
-  #newRoundBtn:active { border-color: var(--violet); color: var(--text); transform: scale(.98); }
+  .wide-btn:active { border-color: var(--violet); color: var(--text); transform: scale(.98); }
+
+  #addOutingBtn {
+    margin-top: 28px; color: var(--text); border: 2px dashed var(--violet); font-size: 15px; padding: 16px;
+  }
+  #addOutingBtn:disabled { opacity: .6; cursor: wait; }
+  .outing-cancel-btn { margin-top: 14px; padding: 11px; font-size: 13px; font-weight: 600; }
+
+  /* ---------- Outings ---------- */
+  .outing + .outing { margin-top: 34px; padding-top: 28px; position: relative; }
+  .outing + .outing::before {
+    content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 2px; border-radius: 2px;
+    background: var(--grad); opacity: .7;
+  }
+  .outing-head {
+    display: flex; align-items: baseline; gap: 8px; margin: 0 2px 12px;
+    font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  }
+  .outing-num { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .outing-when { color: var(--muted); letter-spacing: .04em; }
+  .outings-loading { color: var(--muted); text-align: center; padding: 40px 0; font-size: 15px; }
 
   /* ---------- Save bar ---------- */
   #saveBar {
@@ -356,70 +377,80 @@
     </div>
   </header>
 
-  <div class="card" id="movieCard">
-    <img id="moviePoster" class="poster-thumb" alt="" hidden>
-    <div class="marquee">
-      <div class="label">Now Showing</div>
-      <div class="title empty" id="movieTitle">No movie picked yet</div>
-      <div class="byline" id="movieByline"></div>
-      <div id="movieEdit">
-        <input id="movieInput" type="text" maxlength="60" placeholder="Movie title">
-        <input id="moviePosterInput" type="url" maxlength="300" placeholder="Poster image URL (optional)">
-        <input id="movieTheaterInput" type="text" maxlength="60" placeholder="Theater (optional)">
-        <input id="movieShowtimeInput" type="text" maxlength="30" placeholder="Showtime (optional — e.g. 7:45 PM)">
-        <div class="btns">
-          <button class="save" id="movieSave">Set</button>
-          <button class="cancel" id="movieCancel">Cancel</button>
-        </div>
-      </div>
-    </div>
-    <button class="icon-btn" id="movieEditBtn" aria-label="Edit movie">✏️</button>
-  </div>
-
-  <div class="card" id="lockedCard" hidden>
-    <div id="lockedHead">
-      <div class="label">🎬 It's Official</div>
-      <button class="icon-btn" id="detailsEditBtn" aria-label="Edit theater and showtime" style="width:34px;height:34px;font-size:14px;">✏️</button>
-    </div>
-    <div class="line" id="lockedLine"></div>
-    <div class="sub" id="lockedSub"></div>
-    <div id="lockedWho"></div>
-    <div id="lockedOut"></div>
-    <div id="detailsEdit">
-      <input id="detailsTheater" type="text" maxlength="60" placeholder="Theater (e.g. AMC Empire 25)">
-      <input id="detailsShowtime" type="text" maxlength="30" placeholder="Showtime (e.g. 7:45 PM)">
-      <div class="row">
-        <button id="detailsSave">Set details</button>
-        <button id="detailsCancel">Cancel</button>
-      </div>
-    </div>
-    <div id="calRow" hidden>
-      <button class="cal-btn" id="icsBtn">📅 Add to calendar</button>
-      <a class="cal-btn" id="gcalBtn" target="_blank" rel="noopener">Google Calendar ↗</a>
-    </div>
-  </div>
-
-  <div class="card" id="bestCard" hidden>
-    <div class="label">🏆 Best Night</div>
-    <div class="best-line" id="bestLine"></div>
-    <div class="sub" id="bestSub">Tap to see who's in</div>
-  </div>
-
   <p class="instructions">
     <strong>Tap</strong> the evenings you're free, then hit <strong>Save</strong> · tap again to clear · <strong>hold</strong> a day to see who's in.
   </p>
 
   <div id="legend"></div>
-  <button id="clearBtn" hidden>✕ Sitting this one out? Clear my nights</button>
-  <div id="months"></div>
+  <div id="outingsLoading" class="outings-loading">Loading the calendar…</div>
+  <div id="outings"></div>
+
+  <button id="addOutingBtn" class="wide-btn" hidden>➕ Add another movie outing</button>
 
   <div class="card" id="historyCard">
     <div class="label">🎞️ Movie Night History</div>
     <div id="historyList"></div>
   </div>
-
-  <button id="newRoundBtn">🎬 New Movie Night — clear the board</button>
 </div>
+
+<template id="outingTpl">
+  <section class="outing">
+    <div class="outing-head" hidden><span class="outing-num"></span><span class="outing-when"></span></div>
+
+    <div class="card movie-card">
+      <img class="poster-thumb movie-poster" alt="" hidden>
+      <div class="marquee">
+        <div class="label">Now Showing</div>
+        <div class="title empty movie-title">No movie picked yet</div>
+        <div class="byline movie-byline"></div>
+        <div class="movie-edit">
+          <input class="in-title" type="text" maxlength="60" placeholder="Movie title">
+          <input class="in-poster" type="url" maxlength="300" placeholder="Poster image URL (optional)">
+          <input class="in-theater" type="text" maxlength="60" placeholder="Theater (optional)">
+          <input class="in-showtime" type="text" maxlength="30" placeholder="Showtime (optional — e.g. 7:45 PM)">
+          <div class="btns">
+            <button class="save">Set</button>
+            <button class="cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <button class="icon-btn movie-edit-btn" aria-label="Edit movie">✏️</button>
+    </div>
+
+    <div class="card locked-card" hidden>
+      <div class="locked-head">
+        <div class="label">🎬 It's Official</div>
+        <button class="icon-btn details-edit-btn" aria-label="Edit theater and showtime" style="width:34px;height:34px;font-size:14px;">✏️</button>
+      </div>
+      <div class="line locked-line"></div>
+      <div class="sub locked-sub"></div>
+      <div class="locked-who"></div>
+      <div class="locked-out"></div>
+      <div class="details-edit">
+        <input class="d-theater" type="text" maxlength="60" placeholder="Theater (e.g. AMC Empire 25)">
+        <input class="d-showtime" type="text" maxlength="30" placeholder="Showtime (e.g. 7:45 PM)">
+        <div class="row">
+          <button class="details-save">Set details</button>
+          <button class="details-cancel">Cancel</button>
+        </div>
+      </div>
+      <div class="cal-row">
+        <button class="cal-btn ics-btn">📅 Add to calendar</button>
+        <a class="cal-btn gcal-btn" target="_blank" rel="noopener">Google Calendar ↗</a>
+      </div>
+    </div>
+
+    <div class="card best-card" hidden>
+      <div class="label">🏆 Best Night</div>
+      <div class="best-line"></div>
+      <div class="sub best-sub">Tap to see who's in</div>
+    </div>
+
+    <button class="clear-btn" hidden>✕ Sitting this one out? Clear my nights</button>
+    <div class="months"></div>
+    <button class="wide-btn outing-cancel-btn" hidden>✕ Cancel this outing</button>
+  </section>
+</template>
 
 <div id="saveBar"><button id="saveBtn">💾 Save my nights</button></div>
 <div id="status"></div>
@@ -461,19 +492,35 @@ const PALETTE = ['#ff2d95','#22d3ee','#a3e635','#ffb020','#8b5cf6','#f43f5e','#1
 
 /* ================= STATE ================= */
 let myName = localStorage.getItem('mn_name') || '';
-let data = { movie: { title:'', poster:'', setBy:'', updatedAt:'' }, availability: {}, lockedDate: '', theater: '', showtime: '', history: [], updatedAt: '' };
-let myDates = new Set();
-let dirty = false;        // unsaved local calendar changes
+let data = { outings: [], history: [], updatedAt: '' };   // last known bin record
+let loaded = false;         // true once the bin has been read at least once
+let myDates = {};           // outingId -> Set of my picked dates (local copy)
+let dirty = new Set();      // outingIds with unsaved picks
 let saving = false;
 let filterName = null;
 let longPressed = false;
+const sections = new Map(); // outingId -> its <section> element
+let writeSeq = 0;           // bumps after every successful PUT; a load that started earlier is discarded
+let retryTimer = null, retryDelay = 8000;   // one pending retry at a time, with backoff
 
 /* ================= HELPERS ================= */
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');
 const isoOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const todayIso = () => isoOf(new Date());
+/* "Over" means before YESTERDAY in this device's time zone, not before today:
+   a phone in Tokyo is already on tomorrow while New York is still at the
+   movies. Used for archiving and pruning; the calendar still grays out days
+   before today. */
+const cutoffIso = () => { const d = new Date(); d.setDate(d.getDate() - 1); return isoOf(d); };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const wait = ms => new Promise(res => setTimeout(res, ms));
+const blankMovie = () => ({ title: '', poster: '', setBy: '', updatedAt: '' });
+const newId = () => 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+function blankOuting(createdBy) {
+  return { id: newId(), createdBy: createdBy || '', createdAt: new Date().toISOString(),
+    movie: blankMovie(), availability: {}, lockedDate: '', theater: '', showtime: '' };
+}
 function hashIdx(name) {
   let h = 0;
   for (const ch of name.toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
@@ -484,7 +531,7 @@ function hashIdx(name) {
    color (up to 8 people), and every device computes the same result. */
 let colorMap = {};
 function assignColors() {
-  const names = [...new Set([...Object.keys(data.availability), myName].filter(Boolean))]
+  const names = [...new Set(members())]
     .sort((a, b) => { const x = a.toLowerCase(), y = b.toLowerCase(); return x < y ? -1 : x > y ? 1 : 0; });
   const used = new Set();
   colorMap = {};
@@ -506,16 +553,110 @@ function prettyDate(iso, opts = {}) {
   if (opts.year) fmt.year = 'numeric';
   return new Date(y, m-1, d).toLocaleDateString(undefined, fmt);
 }
-function members() { return Object.keys(data.availability).sort((a,b) => a.localeCompare(b)); }
+function outingById(record, id) { return (record.outings || []).find(o => o.id === id); }
+function rowOf(o, name) {
+  const a = o.availability || {};
+  return Object.prototype.hasOwnProperty.call(a, name) && Array.isArray(a[name]) ? a[name] : [];
+}
+/* Members are everyone who has a row in ANY outing, plus you. Shared across
+   outings, so colors, the legend, and "can't make it" lists are consistent. */
+function members() {
+  const s = new Set();
+  for (const o of data.outings) for (const n of Object.keys(o.availability || {})) s.add(n);
+  if (myName) s.add(myName);
+  return [...s].sort((a, b) => a.localeCompare(b));
+}
 function isHost() { return !!myName && myName.toLowerCase() === CONFIG.HOST_NAME.toLowerCase(); }
-function freeOn(iso) { return members().filter(n => (data.availability[n] || []).includes(iso)); }
-/* Same as freeOn(), but works against an arbitrary record — used when archiving
-   a night to history, where the record being written isn't necessarily the
-   global `data` yet. */
-function attendeesForRecord(record, iso) {
-  return Object.keys(record.availability || {})
-    .filter(n => (record.availability[n] || []).includes(iso))
+function canCancel(o) {
+  return isHost() || (!!myName && !!o.createdBy && o.createdBy.toLowerCase() === myName.toLowerCase());
+}
+function mySet(o) {
+  if (!myDates[o.id]) myDates[o.id] = new Set(rowOf(o, myName));
+  return myDates[o.id];
+}
+/* Your own picks always come from the local copy (which may be unsaved). */
+function picksOf(o, name) { return name === myName ? [...mySet(o)] : rowOf(o, name); }
+function freeOn(o, iso) { return members().filter(n => picksOf(o, n).includes(iso)); }
+function outingLabel(o) {
+  const i = data.outings.indexOf(o);
+  return (o.movie && o.movie.title) || `Outing ${i + 1}`;
+}
+
+/* ================= DATA SHAPE =================
+   Older bins stored one outing at the top level (movie, availability,
+   lockedDate, theater, showtime). Convert that into outings[0] on read.
+   The id is fixed ('o1') so every device converts it identically. */
+function normalize(record) {
+  record = record || {};
+  if (!Array.isArray(record.outings)) {
+    record.outings = [{
+      id: 'o1', createdBy: '', createdAt: '',
+      movie: Object.assign(blankMovie(), record.movie || {}),
+      availability: record.availability || {},
+      lockedDate: record.lockedDate || '',
+      theater: record.theater || '',
+      showtime: record.showtime || ''
+    }];
+  }
+  for (const k of LEGACY_KEYS) delete record[k];
+  record.outings = record.outings.filter(o => o && typeof o === 'object');
+  record.outings.forEach((o, i) => { if (!o.id || typeof o.id !== 'string') o.id = 'x' + i; });
+  for (const o of record.outings) {
+    o.movie = Object.assign(blankMovie(), o.movie || {});
+    o.availability = o.availability || {};
+    o.lockedDate = o.lockedDate || '';
+    o.theater = o.theater || '';
+    o.showtime = o.showtime || '';
+    o.createdBy = o.createdBy || '';
+  }
+  if (!record.outings.length) record.outings.push(Object.assign(blankOuting(''), { id: 'o1' }));
+  record.history = Array.isArray(record.history) ? record.history : [];
+  return record;
+}
+/* Pages from before multiple outings read these top-level fields. Every write
+   includes them as a harmless stub so a stale open tab loads cleanly (and
+   tells its user to refresh) instead of erroring and retrying forever. The
+   new page ignores them; `outings` is the real data. */
+const LEGACY_KEYS = ['movie', 'availability', 'lockedDate', 'theater', 'showtime'];
+const LEGACY_STUB = {
+  movie: { title: '⚠️ Movie Night was updated — refresh this page', poster: '', setBy: '', updatedAt: '' },
+  availability: {}, lockedDate: '', theater: '', showtime: ''
+};
+function pruneOld(record) {
+  const t = cutoffIso();
+  for (const o of record.outings) {
+    for (const n of Object.keys(o.availability)) {
+      const row = Array.isArray(o.availability[n]) ? o.availability[n] : [];
+      o.availability[n] = row.filter(d => d >= t || d === o.lockedDate);
+    }
+  }
+  return record;
+}
+/* Same as freeOn(), but against an arbitrary record's raw data — used when
+   archiving, before the record becomes the global `data`. */
+function attendeesOf(o) {
+  return Object.keys(o.availability || {})
+    .filter(n => rowOf(o, n).includes(o.lockedDate))
     .sort((a, b) => a.localeCompare(b));
+}
+/* Move every outing whose locked night has passed into history and drop it
+   from the board. Mutates `record`; returns the archived outings. Must run
+   BEFORE pruneOld(), which would strip the past date and empty the attendees. */
+function archiveInto(record) {
+  const t = cutoffIso();
+  const done = record.outings.filter(o => o.lockedDate && o.lockedDate < t)
+    .sort((a, b) => a.lockedDate.localeCompare(b.lockedDate));
+  if (!done.length) return [];
+  for (const o of done) {
+    record.history.unshift({
+      date: o.lockedDate, movie: o.movie.title || '', poster: o.movie.poster || '',
+      theater: o.theater || '', showtime: o.showtime || '', attendees: attendeesOf(o)
+    });
+  }
+  record.outings = record.outings.filter(o => !done.includes(o));
+  // Deterministic id, so two devices wrapping the same night at once agree.
+  if (!record.outings.length) record.outings.push(Object.assign(blankOuting(''), { id: 'n' + done[done.length - 1].id }));
+  return done;
 }
 
 /* ================= API ================= */
@@ -524,267 +665,420 @@ async function describeError(r) {
   try { detail = (await r.json()).message || ''; } catch (e) {}
   return `${r.status}${detail ? ': ' + detail : ''}`;
 }
+function fetchT(url, opts = {}) {   // fetch with a 20 s timeout
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), 20000);
+  return fetch(url, Object.assign({}, opts, { signal: ctl.signal })).finally(() => clearTimeout(t));
+}
 async function apiGet() {
-  const r = await fetch(`${CONFIG.API}/${CONFIG.BIN_ID}/latest`, { headers: { 'X-Access-Key': CONFIG.ACCESS_KEY } });
+  const r = await fetchT(`${CONFIG.API}/${CONFIG.BIN_ID}/latest`, { headers: { 'X-Access-Key': CONFIG.ACCESS_KEY } });
   if (!r.ok) throw new Error(`read ${await describeError(r)}`);
-  return (await r.json()).record;
+  return normalize((await r.json()).record);
 }
 async function apiPut(record) {
-  const r = await fetch(`${CONFIG.API}/${CONFIG.BIN_ID}`, {
+  const r = await fetchT(`${CONFIG.API}/${CONFIG.BIN_ID}`, {
     method: 'PUT',
     headers: { 'X-Access-Key': CONFIG.ACCESS_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify(record)
+    body: JSON.stringify(Object.assign({}, record, LEGACY_STUB))
   });
   if (!r.ok) throw new Error(`write ${await describeError(r)}`);
+  writeSeq++;
   return record;
 }
-function pruneOld(record) {
-  const t = todayIso();
-  for (const n of Object.keys(record.availability)) {
-    record.availability[n] = (record.availability[n] || []).filter(d => d >= t);
-  }
-  record.history = record.history || [];   // older bins won't have this field yet
-  return record;
-}
+function goneError() { const e = new Error('that outing was cancelled'); e.gone = true; return e; }
 
 /* ================= SYNC ================= */
-/* After the locked night has passed, the first person to open the page
-   clears the board for the next round. */
-async function maybeReset(record) {
-  if (!record.lockedDate || record.lockedDate >= todayIso()) return record;
-  record.history = record.history || [];
-  record.history.unshift({
-    date: record.lockedDate,
-    movie: (record.movie && record.movie.title) || '',
-    poster: (record.movie && record.movie.poster) || '',
-    theater: record.theater || '',
-    showtime: record.showtime || '',
-    attendees: attendeesForRecord(record, record.lockedDate)
-  });
-  record.availability = {};
-  record.movie = { title: '', poster: '', setBy: '', updatedAt: '' };
-  record.lockedDate = '';
-  record.theater = '';
-  record.showtime = '';
-  record.updatedAt = new Date().toISOString();
-  await new Promise(res => setTimeout(res, CONFIG.PUT_DELAY));
-  await apiPut(record);
-  myDates = new Set();
-  dirty = false;
-  $('saveBar').classList.remove('show');
-  flashStatus('🎬 That round is a wrap — fresh board!', 'ok', 3500);
-  return record;
+/* Bring local picks in line with `data`: forget outings that no longer exist,
+   and refresh every outing you have no unsaved changes in. */
+function syncMine() {
+  const ids = new Set(data.outings.map(o => o.id));
+  for (const id of Object.keys(myDates)) if (!ids.has(id)) { delete myDates[id]; dirty.delete(id); }
+  for (const id of [...dirty]) if (!ids.has(id)) dirty.delete(id);
+  for (const o of data.outings) if (!dirty.has(o.id)) myDates[o.id] = new Set(rowOf(o, myName));
+  updateSaveBar();
+}
+function wrapMessage(done) {
+  if (done.length === 1) return `🎬 ${done[0].movie.title || 'Movie night'} is a wrap — saved to History`;
+  return `🎬 ${done.length} movie nights wrapped — saved to History`;
+}
+function scheduleRetry() {
+  if (retryTimer) return;
+  retryTimer = setTimeout(() => { retryTimer = null; load({ quiet: true }); }, retryDelay);
+  retryDelay = Math.min(retryDelay * 2, 120000);
 }
 async function load({ quiet } = {}) {
+  if (retryTimer) { clearTimeout(retryTimer); retryTimer = null; }
+  const seq = writeSeq;
   try {
-    // maybeReset must see the raw (unpruned) availability so it can capture who
-    // was actually free on the locked date before pruneOld strips past dates.
-    const fresh = pruneOld(await maybeReset(await apiGet()));
-    data = fresh;
-    if (!dirty) myDates = new Set(data.availability[myName] || []);
-    else data.availability[myName] = [...myDates].sort();
+    const fresh = await apiGet();
+    if (saving || seq !== writeSeq) return;   // a save landed meanwhile; its result is newer
+    const done = archiveInto(fresh);
+    if (done.length) {
+      if (saving) return;               // a save will archive it with the same result
+      saving = true;
+      try {
+        fresh.updatedAt = new Date().toISOString();
+        await wait(CONFIG.PUT_DELAY);
+        await apiPut(fresh);
+      } finally { saving = false; }
+    }
+    if (saving || seq + (done.length ? 1 : 0) !== writeSeq) return;
+    data = pruneOld(fresh);
+    loaded = true;
+    retryDelay = 8000;
+    syncMine();
     render();
-    if (!quiet) flashStatus('Synced ✓', 'ok');
+    if (done.length) flashStatus(wrapMessage(done), 'ok', 3500);
+    else if (!quiet) flashStatus('Synced ✓', 'ok');
   } catch (e) {
     flashStatus('Can’t reach the calendar — retrying…', 'err', 4000);
-    setTimeout(() => load({ quiet: true }), 8000);
+    scheduleRetry();
   }
 }
-function markDirty() {
-  dirty = true;
-  const n = myDates.size;
-  $('saveBtn').textContent = `💾 Save my nights${n ? ` (${n})` : ''}`;
-  $('saveBtn').classList.remove('error');
+function updateSaveBar() {
+  const btn = $('saveBtn');
+  if (!dirty.size) { $('saveBar').classList.remove('show'); return; }
+  let n = 0;
+  const t = todayIso();
+  for (const id of dirty) for (const d of (myDates[id] || [])) if (d >= t) n++;
+  btn.textContent = `💾 Save my nights${n ? ` (${n})` : ''}`;
   $('saveBar').classList.add('show');
 }
-async function save(extra) {
-  if (saving) return;
+function markDirty(id) {
+  dirty.add(id);
+  $('saveBtn').classList.remove('error');
+  updateSaveBar();
+}
+/* The one write path. Re-reads the bin, writes ONLY your own rows in outings
+   you changed, applies `mutate(fresh)` for any other edit, then PUTs — so two
+   people saving at once can't wipe each other out. Returns true on success. */
+async function save(mutate, okMsg) {
+  while (saving) await wait(150);   // one write at a time; later edits wait their turn
   saving = true;
   const btn = $('saveBtn');
   btn.disabled = true;
   btn.textContent = 'Saving…';
+  let ok = false, gone = false;
   try {
-    const fresh = pruneOld(await apiGet());        // re-read, so we never clobber the other guys
-    if (extra && extra.remove) delete fresh.availability[extra.remove];
-    fresh.availability[myName] = [...myDates].filter(d => d >= todayIso()).sort();
-    if (extra && extra.movie) fresh.movie = extra.movie;
-    if (extra && 'lock' in extra) fresh.lockedDate = extra.lock;
-    if (extra && 'theater' in extra) fresh.theater = extra.theater;
-    if (extra && 'showtime' in extra) fresh.showtime = extra.showtime;
+    const fresh = await apiGet();
+    const done = archiveInto(fresh);
+    pruneOld(fresh);
+    const t = cutoffIso();
+    const wrapped = new Set(done.map(o => o.id));
+    let lost = 0, lostWrapped = 0;
+    const written = {};   // what we sent per outing, to spot taps made while saving
+    for (const id of dirty) {
+      const o = outingById(fresh, id);
+      written[id] = [...(myDates[id] || [])].sort().join(',');
+      if (o) o.availability[myName] = [...(myDates[id] || [])].filter(d => d >= t).sort();
+      else if (wrapped.has(id)) lostWrapped++;
+      else lost++;
+    }
+    if (mutate) mutate(fresh);
     fresh.updatedAt = new Date().toISOString();
-    await new Promise(res => setTimeout(res, CONFIG.PUT_DELAY));
+    await wait(CONFIG.PUT_DELAY);
     await apiPut(fresh);
     data = fresh;
-    dirty = false;
+    loaded = true;
+    // Clear only outings whose picks are exactly what we sent; a tap made
+    // during the save stays unsaved instead of being wiped.
+    for (const id of [...dirty]) {
+      if (id in written && [...(myDates[id] || [])].sort().join(',') === written[id]) dirty.delete(id);
+    }
+    syncMine();
     render();
     btn.disabled = false;
-    $('saveBar').classList.remove('show');
-    flashStatus('Saved ✓ Your nights are in!', 'ok', 2500);
+    if (lost) flashStatus('Saved — but one outing was cancelled, so those picks are gone', 'err', 5000);
+    else if (lostWrapped) flashStatus('Saved — one outing’s night already happened, so it moved to History', 'ok', 5000);
+    else if (done.length) flashStatus(wrapMessage(done), 'ok', 3500);
+    else flashStatus(okMsg || 'Saved ✓ Your nights are in!', 'ok', 2500);
+    ok = true;
   } catch (e) {
     btn.disabled = false;
-    btn.classList.add('error');
-    btn.textContent = '⚠️ Save failed — tap to try again';
-    flashStatus(`Couldn't save (${e.message})`, 'err', 6000);
+    if (e.gone) {
+      flashStatus('Someone cancelled that outing — refreshing', 'err', 4000);
+      updateSaveBar();
+      gone = true;
+    } else {
+    if (dirty.size) {
+      btn.classList.add('error');
+      btn.textContent = '⚠️ Save failed — tap to try again';
+      $('saveBar').classList.add('show');
+    } else {
+      $('saveBar').classList.remove('show');
+    }
+    if (mutate) {
+      // The edit itself (lock, movie details, add/remove…) didn't land: say so
+      // and put the screen back to what's really saved.
+      flashStatus(`That change didn't save (${e.message}) — please try it again`, 'err', 6000);
+      setTimeout(() => { if (!saving) load({ quiet: true }); }, 1500);
+    } else {
+      flashStatus(`Couldn't save (${e.message})`, 'err', 6000);
+    }
+    }
   } finally {
     saving = false;
   }
-}
-/* Manual full board reset — any member can start a fresh round (e.g. whoever's
-   organizing/buying tickets this time) instead of waiting for the automatic
-   post-event reset. Same wipe as maybeReset(): movie, theater, showtime,
-   lock, and everyone's picks. */
-async function startNewRound() {
-  const btn = $('newRoundBtn');
-  btn.disabled = true;
-  const prevText = btn.textContent;
-  btn.textContent = 'Clearing…';
-  try {
-    // Read the raw (unpruned) record so attendeesForRecord can still see picks
-    // on the locked date even if that date is already in the past.
-    const raw = await apiGet();
-    if (raw.lockedDate) {
-      raw.history = raw.history || [];
-      raw.history.unshift({
-        date: raw.lockedDate,
-        movie: (raw.movie && raw.movie.title) || '',
-        poster: (raw.movie && raw.movie.poster) || '',
-        theater: raw.theater || '',
-        showtime: raw.showtime || '',
-        attendees: attendeesForRecord(raw, raw.lockedDate)
-      });
-    }
-    const fresh = pruneOld(raw);
-    fresh.availability = {};
-    fresh.movie = { title: '', poster: '', setBy: '', updatedAt: '' };
-    fresh.lockedDate = '';
-    fresh.theater = '';
-    fresh.showtime = '';
-    fresh.updatedAt = new Date().toISOString();
-    await new Promise(res => setTimeout(res, CONFIG.PUT_DELAY));
-    await apiPut(fresh);
-    data = fresh;
-    myDates = new Set();
-    dirty = false;
-    filterName = null;
-    $('saveBar').classList.remove('show');
-    render();
-    flashStatus('🎬 New round started — board is clear!', 'ok', 3500);
-  } catch (e) {
-    flashStatus(`Couldn't start new round (${e.message})`, 'err', 6000);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = prevText;
+  if (gone) {   // reload after releasing the lock; a queued save may run first, which is fine
+    await wait(CONFIG.PUT_DELAY);
+    if (!saving) await load({ quiet: true });
   }
+  return ok;
+}
+/* Apply an edit to one outing, both locally (so the screen updates now) and
+   inside the save (so it lands on the fresh copy). */
+function saveOuting(id, edit, okMsg) {
+  const local = outingById(data, id);
+  if (local) { edit(local); render(); }
+  return save(fresh => {
+    const o = outingById(fresh, id);
+    if (!o) throw goneError();
+    edit(o);
+  }, okMsg);
+}
+async function addOuting() {
+  const btn = $('addOutingBtn');
+  if (btn.disabled) return;
+  btn.disabled = true;
+  const o = blankOuting(myName);
+  const ok = await save(fresh => { fresh.outings.push(o); }, '🎬 New outing added — set the movie, then pick your nights');
+  btn.disabled = false;
+  if (!ok) return;
+  const sec = sections.get(o.id);
+  if (sec) {
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    openMovieEdit(sec, o.id);
+  }
+}
+async function cancelOuting(id) {
+  const o = outingById(data, id);
+  if (!o) return;
+  const name = o.movie.title ? `“${o.movie.title}”` : 'this outing';
+  if (!confirm(`Cancel ${name}? Its movie details and everyone's picked nights for it will be deleted. (It won't go into History.)`)) return;
+  if (!confirm('Are you really sure? This can’t be undone.')) return;
+  const prevDates = myDates[id], wasDirty = dirty.has(id);
+  delete myDates[id];
+  dirty.delete(id);
+  const ok = await save(fresh => {
+    fresh.outings = fresh.outings.filter(x => x.id !== id);
+    if (!fresh.outings.length) fresh.outings.push(Object.assign(blankOuting(''), { id: 'n' + id }));
+  }, 'Outing cancelled');
+  if (!ok && outingById(data, id)) {           // put local state back if the cancel didn't go through
+    if (prevDates) myDates[id] = prevDates;
+    if (wasDirty) dirty.add(id);
+    updateSaveBar();
+  }
+}
+function removeMember(name) {
+  for (const o of data.outings) delete o.availability[name];
+  if (filterName === name) filterName = null;
+  render();
+  save(fresh => { for (const o of fresh.outings) delete o.availability[name]; }, `Removed ${name}`);
 }
 
 /* ================= RENDER ================= */
 function render() {
   assignColors();
-  renderUser(); renderMovie(); renderLocked(); renderBest(); renderLegend(); renderMonths(); renderHistory();
-  $('clearBtn').hidden = myDates.size === 0;
-}
-function renderLocked() {
-  const card = $('lockedCard');
-  if (!data.lockedDate) { card.hidden = true; return; }
-  card.hidden = false;
-  $('lockedLine').textContent = prettyDate(data.lockedDate) + (data.showtime ? ` · ${data.showtime}` : '');
-  const movie = data.movie && data.movie.title;
-  const free = freeOn(data.lockedDate);
-  const out = members().filter(n => !free.includes(n));
-  const bits = [movie || 'Movie TBD'];
-  if (data.theater) bits.push(`📍 ${data.theater}`);
-  bits.push(`${free.length} going`);
-  if (isHost()) bits.push('hold the day to unlock');
-  $('lockedSub').textContent = bits.join(' · ');
-  $('lockedWho').innerHTML = free.map(n =>
-    `<span class="chip"><span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}</span>`
-  ).join('');
-  $('lockedOut').textContent = out.length ? `Can't make it: ${out.join(', ')}` : '';
-  $('calRow').hidden = false;
-  $('gcalBtn').href = gcalLink();
-}
-/* ---- Calendar export ---- */
-function eventTimes() {
-  const [y, mo, d] = data.lockedDate.split('-').map(Number);
-  let h = 19, min = 0;
-  const m = (data.showtime || '').match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
-  if (m) {
-    h = parseInt(m[1], 10);
-    min = m[2] ? parseInt(m[2], 10) : 0;
-    const ap = (m[3] || '').toLowerCase();
-    if (ap === 'pm' && h < 12) h += 12;
-    if (ap === 'am' && h === 12) h = 0;
-    if (!ap && h <= 8) h += 12; // "7:45" on a movie app means evening
-  }
-  const start = new Date(y, mo - 1, d, h, min);
-  const end = new Date(start.getTime() + 3 * 3600 * 1000);
-  return { start, end };
-}
-const fmtCal = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
-function eventSummary() { return 'Movie Night' + (data.movie && data.movie.title ? ` — ${data.movie.title}` : ''); }
-function eventDescription() { return `Going: ${freeOn(data.lockedDate).join(', ')}`; }
-function gcalLink() {
-  const { start, end } = eventTimes();
-  const p = new URLSearchParams({
-    action: 'TEMPLATE',
-    text: eventSummary(),
-    dates: `${fmtCal(start)}/${fmtCal(end)}`,
-    location: data.theater || '',
-    details: eventDescription()
-  });
-  return `https://calendar.google.com/calendar/render?${p}`;
-}
-function downloadICS() {
-  const { start, end } = eventTimes();
-  const escICS = s => String(s).replace(/([,;\\])/g, '\\$1');
-  const ics = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//MovieNight//EN', 'BEGIN:VEVENT',
-    `UID:${data.lockedDate}-${Date.now()}@movienight`,
-    `DTSTAMP:${fmtCal(new Date())}`,
-    `DTSTART:${fmtCal(start)}`,
-    `DTEND:${fmtCal(end)}`,
-    `SUMMARY:${escICS(eventSummary())}`,
-    `LOCATION:${escICS(data.theater || '')}`,
-    `DESCRIPTION:${escICS(eventDescription())}`,
-    'END:VEVENT', 'END:VCALENDAR'
-  ].join('\r\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
-  a.download = 'movienight.ics';
-  a.click();
-  URL.revokeObjectURL(a.href);
+  renderUser(); renderLegend(); renderOutings(); renderHistory();
 }
 function renderUser() {
   $('userName').textContent = myName;
   $('userDot').style.background = colorOf(myName);
 }
-function renderMovie() {
-  const t = $('movieTitle');
+function renderLegend() {
+  const el = $('legend');
+  el.innerHTML = '';
+  el.classList.toggle('filtering', !!filterName);
+  for (const n of members()) {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (filterName === n ? ' active' : '');
+    chip.innerHTML = `<span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}`;
+    chip.onclick = () => { filterName = (filterName === n) ? null : n; render(); };
+    if (isHost() && n !== myName) {
+      const x = document.createElement('span');
+      x.className = 'x';
+      x.textContent = '✕';
+      x.title = `Remove ${n}`;
+      x.onclick = e => {
+        e.stopPropagation();
+        if (!confirm(`Remove ${n} from the group completely? Their picks in every outing will be deleted. They can rejoin anytime by entering their name again.`)) return;
+        removeMember(n);
+      };
+      chip.appendChild(x);
+    }
+    el.appendChild(chip);
+  }
+}
+function renderOutings() {
+  const holder = $('outings');
+  $('outingsLoading').hidden = loaded;
+  const ids = data.outings.map(o => o.id);
+  for (const [id, el] of sections) if (!ids.includes(id)) { el.remove(); sections.delete(id); }
+  data.outings.forEach((o, i) => {
+    let sec = sections.get(o.id);
+    if (!sec) { sec = buildSection(o.id); sections.set(o.id, sec); }
+    // Only move a section if it's out of place (moving would blur a focused input).
+    if (holder.children[i] !== sec) holder.insertBefore(sec, holder.children[i] || null);
+    renderOuting(sec, o, i);
+  });
+  $('addOutingBtn').hidden = !loaded;
+}
+function renderOuting(sec, o, i) {
+  const q = sel => sec.querySelector(sel);
+  const many = data.outings.length > 1;
+  q('.outing-head').hidden = !many;
+  q('.outing-num').textContent = `Outing ${i + 1} of ${data.outings.length}`;
+  q('.outing-when').textContent = o.lockedDate ? `· ${prettyDate(o.lockedDate)}` : '';
+  renderMovie(sec, o);
+  renderLocked(sec, o);
+  renderBest(sec, o);
+  renderMonths(sec, o);
+  const t = todayIso();
+  q('.clear-btn').hidden = ![...mySet(o)].some(d => d >= t);
+  q('.outing-cancel-btn').hidden = !(many || o.movie.title || o.lockedDate) || !canCancel(o);
+}
+function renderMovie(sec, o) {
+  const q = sel => sec.querySelector(sel);
+  const t = q('.movie-title');
   const bits = [];
-  if (data.movie && data.movie.title) {
-    t.textContent = data.movie.title;
+  if (o.movie.title) {
+    t.textContent = o.movie.title;
     t.classList.remove('empty');
-    if (data.movie.setBy) bits.push(`picked by ${data.movie.setBy}`);
+    if (o.movie.setBy) bits.push(`picked by ${o.movie.setBy}`);
   } else {
     t.textContent = 'No movie picked yet';
     t.classList.add('empty');
   }
-  if (data.theater) bits.push(`📍 ${data.theater}`);
-  if (data.showtime) bits.push(data.showtime);
-  $('movieByline').textContent = bits.join(' · ');
-  const posterEl = $('moviePoster');
-  const posterUrl = data.movie && data.movie.poster;
-  if (posterUrl) {
-    posterEl.src = posterUrl;
+  if (o.theater) bits.push(`📍 ${o.theater}`);
+  if (o.showtime) bits.push(o.showtime);
+  q('.movie-byline').textContent = bits.join(' · ');
+  const posterEl = q('.movie-poster');
+  if (o.movie.poster) {
+    if (posterEl.getAttribute('src') !== o.movie.poster) posterEl.src = o.movie.poster;
     posterEl.hidden = false;
   } else {
     posterEl.hidden = true;
     posterEl.removeAttribute('src');
   }
 }
+function renderLocked(sec, o) {
+  const q = sel => sec.querySelector(sel);
+  const card = q('.locked-card');
+  if (!o.lockedDate) { card.hidden = true; return; }
+  card.hidden = false;
+  const over = o.lockedDate < todayIso();   // the day after: still shown until it's archived
+  q('.locked-head .label').textContent = over ? "🎞️ That's a wrap" : "🎬 It's Official";
+  q('.cal-row').hidden = over;
+  q('.details-edit-btn').hidden = over;
+  q('.locked-line').textContent = prettyDate(o.lockedDate) + (o.showtime ? ` · ${o.showtime}` : '');
+  const free = freeOn(o, o.lockedDate);
+  const out = members().filter(n => !free.includes(n));
+  const bits = [o.movie.title || 'Movie TBD'];
+  if (o.theater) bits.push(`📍 ${o.theater}`);
+  bits.push(`${free.length} going`);
+  if (isHost() && !over) bits.push('hold the day to unlock');
+  if (over) bits.push('moves to History tomorrow');
+  q('.locked-sub').textContent = bits.join(' · ');
+  q('.locked-who').innerHTML = free.map(n =>
+    `<span class="chip"><span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}</span>`
+  ).join('');
+  q('.locked-out').textContent = out.length ? `${over ? "Couldn't" : "Can't"} make it: ${out.join(', ')}` : '';
+  q('.gcal-btn').href = gcalLink(o);
+}
+function bestNights(o) {
+  const counts = {}, t = todayIso();
+  for (const n of members()) for (const d of picksOf(o, n)) if (d >= t) counts[d] = (counts[d] || 0) + 1;
+  const max = Math.max(0, ...Object.values(counts));
+  if (max < 2) return { max: 0, dates: [] };
+  return { max, dates: Object.keys(counts).filter(d => counts[d] === max).sort() };
+}
+function renderBest(sec, o) {
+  const q = sel => sec.querySelector(sel);
+  const { max, dates } = bestNights(o);
+  const card = q('.best-card');
+  if (!dates.length || o.lockedDate) { card.hidden = true; return; }
+  card.hidden = false;
+  const total = members().length;
+  card.dataset.date = dates[0];
+  const line = q('.best-line');
+  if (isHost()) {
+    line.innerHTML = '';
+    const pills = document.createElement('div');
+    pills.className = 'best-pills';
+    for (const d of dates.slice(0, 4)) {
+      const pill = document.createElement('button');
+      pill.className = 'best-pill';
+      pill.innerHTML = `🔓 ${esc(prettyDate(d))} <span class="n">${freeOn(o, d).length} of ${total}</span>`;
+      pill.onclick = e => { e.stopPropagation(); openLockSheet(o.id, d); };
+      pills.appendChild(pill);
+    }
+    line.appendChild(pills);
+    q('.best-sub').textContent = dates.length > 4
+      ? `+${dates.length - 4} more tied — hold a day to lock a different night`
+      : `You're the host — tap a night to lock it in for the group`;
+  } else {
+    const shown = dates.slice(0, 3).map(d => prettyDate(d)).join('  ·  ');
+    const extra = dates.length > 3 ? ` +${dates.length - 3} more` : '';
+    line.textContent = `${shown}${extra}`;
+    q('.best-sub').textContent = `${max} of ${total} free — tap to see who's in`;
+  }
+}
+function renderMonths(sec, o) {
+  const holder = sec.querySelector('.months');
+  holder.innerHTML = '';
+  const now = new Date();
+  const best = new Set(bestNights(o).dates);
+  const mine = mySet(o);
+  const t = todayIso();
+  for (let m = 0; m < CONFIG.MONTHS; m++) {
+    const first = new Date(now.getFullYear(), now.getMonth() + m, 1);
+    const monthEl = document.createElement('div');
+    monthEl.className = 'month';
+    monthEl.innerHTML = `<h2>${first.toLocaleDateString(undefined, { month:'long', year:'numeric' })}</h2>
+      <div class="dow">${['S','M','T','W','T','F','S'].map(d => `<span>${d}</span>`).join('')}</div>`;
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    for (let i = 0; i < first.getDay(); i++) {
+      const b = document.createElement('div'); b.className = 'day blank'; grid.appendChild(b);
+    }
+    const daysInMonth = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = isoOf(new Date(first.getFullYear(), first.getMonth(), d));
+      const cell = document.createElement('div');
+      cell.className = 'day';
+      cell.textContent = d;
+      cell.dataset.date = iso;
+      const past = iso < t;
+      if (past) cell.classList.add('past');
+      const free = freeOn(o, iso);
+      const isMine = mine.has(iso);
+      if (isMine) {
+        cell.classList.add('mine');
+        const c = colorOf(myName);
+        cell.style.setProperty('--mycolor', c);
+        cell.style.setProperty('--glow', c + '88');
+      }
+      if (free.length > 0 && !past) {
+        cell.innerHTML += `<span class="count">${free.length}</span>`;
+        const others = free.filter(n => n !== myName).slice(0, 4);
+        if (others.length) {
+          cell.innerHTML += `<span class="dots">${others.map(n => `<i style="background:${colorOf(n)}"></i>`).join('')}</span>`;
+        }
+      }
+      if (best.has(iso) && !past && !o.lockedDate) cell.classList.add('best-day');
+      if (iso === o.lockedDate) cell.classList.add('locked-day');
+      if (filterName && !past && !free.includes(filterName)) cell.classList.add('dimmed');
+      if (!past) attachDayEvents(cell, o.id, iso);
+      grid.appendChild(cell);
+    }
+    monthEl.appendChild(grid);
+    holder.appendChild(monthEl);
+  }
+}
 function renderHistory() {
   const holder = $('historyList');
-  const hist = data.history || [];
+  // Hand-edited entries stay in the bin untouched; ones the page can't show are just skipped.
+  const hist = (data.history || []).filter(h => h && typeof h.date === 'string' && /^\d{4}-\d{2}-\d{1,2}$/.test(h.date));
   if (!hist.length) {
     holder.innerHTML = '<div class="history-empty">No past nights yet — this fills in automatically once a movie night wraps up.</div>';
     return;
@@ -805,153 +1099,148 @@ function renderHistory() {
     return `<div class="history-item">
       ${poster}
       <div class="h-body">
-        <div class="h-title">${esc(h.movie || 'Movie TBD')}</div>
+        <div class="h-title">${esc((h.movie && h.movie !== LEGACY_STUB.movie.title) ? h.movie : 'Movie TBD')}</div>
         <div class="h-sub">${esc(prettyDate(h.date, { year: true }))}${bits.length ? ' · ' + bits.join(' · ') : ''}</div>
         ${who ? `<div class="h-who">🎟️ ${who}</div>` : ''}
       </div>
     </div>`;
   }).join('');
 }
-function bestNights() {
-  const counts = {};
-  for (const n of members()) for (const d of data.availability[n] || []) counts[d] = (counts[d] || 0) + 1;
-  const max = Math.max(0, ...Object.values(counts));
-  if (max < 2) return { max: 0, dates: [] };
-  return { max, dates: Object.keys(counts).filter(d => counts[d] === max).sort() };
-}
-function renderBest() {
-  const { max, dates } = bestNights();
-  const card = $('bestCard');
-  if (!dates.length || data.lockedDate) { card.hidden = true; return; }
-  card.hidden = false;
-  const total = members().length;
-  card.dataset.date = dates[0];
-  if (isHost()) {
-    // Host view: each candidate is an explicit lock button
-    $('bestLine').innerHTML = '';
-    const pills = document.createElement('div');
-    pills.className = 'best-pills';
-    for (const d of dates.slice(0, 4)) {
-      const pill = document.createElement('button');
-      pill.className = 'best-pill';
-      pill.innerHTML = `🔓 ${esc(prettyDate(d))} <span class="n">${freeOn(d).length} of ${total}</span>`;
-      pill.onclick = e => { e.stopPropagation(); openLockSheet(d); };
-      pills.appendChild(pill);
-    }
-    $('bestLine').appendChild(pills);
-    $('bestSub').textContent = dates.length > 4
-      ? `+${dates.length - 4} more tied — hold a day to lock a different night`
-      : `You're the host — tap a night to lock it in for the group`;
-  } else {
-    const shown = dates.slice(0, 3).map(prettyDate).join('  ·  ');
-    const extra = dates.length > 3 ? ` +${dates.length - 3} more` : '';
-    $('bestLine').textContent = `${shown}${extra}`;
-    $('bestSub').textContent = `${max} of ${total} free — tap to see who's in`;
+
+/* ---- Calendar export ---- */
+function eventTimes(o) {
+  const [y, mo, d] = o.lockedDate.split('-').map(Number);
+  let h = 19, min = 0;
+  const m = (o.showtime || '').match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+  if (m) {
+    h = parseInt(m[1], 10);
+    min = m[2] ? parseInt(m[2], 10) : 0;
+    const ap = (m[3] || '').toLowerCase();
+    if (ap === 'pm' && h < 12) h += 12;
+    if (ap === 'am' && h === 12) h = 0;
+    if (!ap && h <= 8) h += 12; // "7:45" on a movie app means evening
   }
+  const start = new Date(y, mo - 1, d, h, min);
+  const end = new Date(start.getTime() + 3 * 3600 * 1000);
+  return { start, end };
 }
-/* ---- Host lock confirmation ---- */
-function openLockSheet(iso) {
-  const free = freeOn(iso);
-  const out = members().filter(n => !free.includes(n));
-  $('lockTitle').textContent = `Lock in ${prettyDate(iso)}?`;
-  $('lockWho').innerHTML = free.length
-    ? free.map(n => `<div class="row"><span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}</div>`).join('')
-    : '<div class="nobody">Nobody has picked this night yet.</div>';
-  $('lockOut').textContent = out.length ? `Can't make it: ${out.join(', ')}` : 'Everyone can make it 🎉';
-  $('lockMovie').value = (data.movie && data.movie.title) || '';
-  $('lockPoster').value = (data.movie && data.movie.poster) || '';
-  $('lockTheater').value = data.theater || '';
-  $('lockShowtime').value = data.showtime || '';
-  $('lockConfirm').dataset.date = iso;
-  $('lockSheet').classList.add('open');
-  $('scrim').classList.add('open');
+const fmtCal = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+function eventSummary(o) { return 'Movie Night' + (o.movie.title ? ` — ${o.movie.title}` : ''); }
+function eventDescription(o) { return `Going: ${freeOn(o, o.lockedDate).join(', ')}`; }
+function gcalLink(o) {
+  const { start, end } = eventTimes(o);
+  const p = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: eventSummary(o),
+    dates: `${fmtCal(start)}/${fmtCal(end)}`,
+    location: o.theater || '',
+    details: eventDescription(o)
+  });
+  return `https://calendar.google.com/calendar/render?${p}`;
 }
-function renderLegend() {
-  const el = $('legend');
-  el.innerHTML = '';
-  el.classList.toggle('filtering', !!filterName);
-  for (const n of members()) {
-    const chip = document.createElement('div');
-    chip.className = 'chip' + (filterName === n ? ' active' : '');
-    chip.innerHTML = `<span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}`;
-    chip.onclick = () => { filterName = (filterName === n) ? null : n; render(); };
-    if (isHost() && n !== myName) {
-      const x = document.createElement('span');
-      x.className = 'x';
-      x.textContent = '✕';
-      x.title = `Remove ${n}`;
-      x.onclick = e => {
-        e.stopPropagation();
-        if (!confirm(`Remove ${n} from the group completely? Their picks will be deleted. They can rejoin anytime by entering their name again.`)) return;
-        removeMember(n);
-      };
-      chip.appendChild(x);
-    }
-    el.appendChild(chip);
+function downloadICS(o) {
+  const { start, end } = eventTimes(o);
+  const escICS = s => String(s).replace(/([,;\\])/g, '\\$1');
+  const ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//MovieNight//EN', 'BEGIN:VEVENT',
+    `UID:${o.id}-${o.lockedDate}-${Date.now()}@movienight`,
+    `DTSTAMP:${fmtCal(new Date())}`,
+    `DTSTART:${fmtCal(start)}`,
+    `DTEND:${fmtCal(end)}`,
+    `SUMMARY:${escICS(eventSummary(o))}`,
+    `LOCATION:${escICS(o.theater || '')}`,
+    `DESCRIPTION:${escICS(eventDescription(o))}`,
+    'END:VEVENT', 'END:VCALENDAR'
+  ].join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+  a.download = 'movienight.ics';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ================= OUTING SECTION =================
+   Each outing gets one <section>, cloned from #outingTpl the first time it's
+   seen and then only updated — so an open edit form survives re-renders and
+   background polls. Handlers look the outing up by id at click time. */
+function buildSection(id) {
+  const sec = $('outingTpl').content.firstElementChild.cloneNode(true);
+  sec.dataset.id = id;
+  const q = sel => sec.querySelector(sel);
+  const cur = () => outingById(data, id);
+
+  q('.movie-edit-btn').onclick = () => openMovieEdit(sec, id);
+  q('.movie-edit .cancel').onclick = () => q('.movie-edit').classList.remove('open');
+  q('.movie-edit .save').onclick = () => {
+    const o = cur(); if (!o) return;
+    const was = sec._movieSnap || {};
+    const now = { title: q('.in-title').value.trim(), poster: q('.in-poster').value.trim(),
+      theater: q('.in-theater').value.trim(), showtime: q('.in-showtime').value.trim() };
+    q('.movie-edit').classList.remove('open');
+    saveOuting(id, x => applyChanges(x, was, now));
+  };
+
+  q('.details-edit-btn').onclick = () => {
+    const o = cur(); if (!o) return;
+    sec._detailsSnap = { theater: o.theater, showtime: o.showtime };
+    q('.d-theater').value = o.theater;
+    q('.d-showtime').value = o.showtime;
+    q('.details-edit').classList.add('open');
+    q('.d-theater').focus();
+  };
+  q('.details-cancel').onclick = () => q('.details-edit').classList.remove('open');
+  q('.details-save').onclick = () => {
+    const was = sec._detailsSnap || {};
+    const now = { theater: q('.d-theater').value.trim(), showtime: q('.d-showtime').value.trim() };
+    q('.details-edit').classList.remove('open');
+    saveOuting(id, x => applyChanges(x, was, now));
+  };
+  q('.ics-btn').onclick = () => { const o = cur(); if (o) downloadICS(o); };
+
+  q('.best-card').onclick = () => { if (!isHost() && q('.best-card').dataset.date) openSheet(id, q('.best-card').dataset.date); };
+  q('.clear-btn').onclick = () => {
+    const o = cur(); if (!o) return;
+    if (!confirm(`Clear all your nights for ${outingLabel(o)}? You can always tap days again if plans change.`)) return;
+    mySet(o).clear();
+    markDirty(id);
+    render();
+  };
+  q('.outing-cancel-btn').onclick = () => cancelOuting(id);
+  return sec;
+}
+/* Write only the fields the person actually changed in a form, compared with
+   what the form showed when it opened — so a form left open while someone
+   else edits doesn't put their old values back. */
+function applyChanges(x, was, now) {
+  const changed = k => k in now && now[k] !== (was[k] || '');
+  if (changed('title') || changed('poster')) {
+    x.movie = {
+      title: changed('title') ? now.title : x.movie.title,
+      poster: changed('poster') ? now.poster : x.movie.poster,
+      setBy: myName, updatedAt: new Date().toISOString()
+    };
   }
+  if (changed('theater')) x.theater = now.theater;
+  if (changed('showtime')) x.showtime = now.showtime;
 }
-function renderMonths() {
-  const holder = $('months');
-  holder.innerHTML = '';
-  const now = new Date();
-  const best = new Set(bestNights().dates);
-  for (let m = 0; m < CONFIG.MONTHS; m++) {
-    const first = new Date(now.getFullYear(), now.getMonth() + m, 1);
-    const monthEl = document.createElement('div');
-    monthEl.className = 'month';
-    monthEl.innerHTML = `<h2>${first.toLocaleDateString(undefined, { month:'long', year:'numeric' })}</h2>
-      <div class="dow">${['S','M','T','W','T','F','S'].map(d => `<span>${d}</span>`).join('')}</div>`;
-    const grid = document.createElement('div');
-    grid.className = 'grid';
-    for (let i = 0; i < first.getDay(); i++) {
-      const b = document.createElement('div'); b.className = 'day blank'; grid.appendChild(b);
-    }
-    const daysInMonth = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
-    const t = todayIso();
-    for (let d = 1; d <= daysInMonth; d++) {
-      const iso = isoOf(new Date(first.getFullYear(), first.getMonth(), d));
-      const cell = document.createElement('div');
-      cell.className = 'day';
-      cell.textContent = d;
-      cell.dataset.date = iso;
-      const past = iso < t;
-      if (past) cell.classList.add('past');
-      const free = freeOn(iso);
-      const mine = myDates.has(iso);
-      if (mine) {
-        cell.classList.add('mine');
-        const c = colorOf(myName);
-        cell.style.setProperty('--mycolor', c);
-        cell.style.setProperty('--glow', c + '88');
-      }
-      const count = free.length + ((mine && !free.includes(myName)) ? 1 : 0);
-      if (count > 0 && !past) {
-        cell.innerHTML += `<span class="count">${count}</span>`;
-        const others = free.filter(n => n !== myName).slice(0, 4);
-        if (others.length) {
-          cell.innerHTML += `<span class="dots">${others.map(n => `<i style="background:${colorOf(n)}"></i>`).join('')}</span>`;
-        }
-      }
-      if (best.has(iso) && !past && !data.lockedDate) cell.classList.add('best-day');
-      if (iso === data.lockedDate) cell.classList.add('locked-day');
-      if (filterName && !past) {
-        const personFree = filterName === myName ? mine : free.includes(filterName);
-        if (!personFree) cell.classList.add('dimmed');
-      }
-      if (!past) attachDayEvents(cell, iso);
-      grid.appendChild(cell);
-    }
-    monthEl.appendChild(grid);
-    holder.appendChild(monthEl);
-  }
+function openMovieEdit(sec, id) {
+  const o = outingById(data, id); if (!o) return;
+  const q = sel => sec.querySelector(sel);
+  sec._movieSnap = { title: o.movie.title, poster: o.movie.poster, theater: o.theater, showtime: o.showtime };
+  q('.in-title').value = o.movie.title;
+  q('.in-poster').value = o.movie.poster;
+  q('.in-theater').value = o.theater;
+  q('.in-showtime').value = o.showtime;
+  q('.movie-edit').classList.add('open');
+  q('.in-title').focus({ preventScroll: true });
 }
 
 /* ================= DAY INTERACTION ================= */
-function attachDayEvents(cell, iso) {
+function attachDayEvents(cell, id, iso) {
   let timer = null;
   cell.addEventListener('pointerdown', () => {
     longPressed = false;
-    timer = setTimeout(() => { longPressed = true; openSheet(iso); }, 450);
+    timer = setTimeout(() => { longPressed = true; openSheet(id, iso); }, 450);
   });
   const cancel = () => clearTimeout(timer);
   cell.addEventListener('pointerup', cancel);
@@ -959,40 +1248,64 @@ function attachDayEvents(cell, iso) {
   cell.addEventListener('pointercancel', cancel);
   cell.addEventListener('click', () => {
     if (longPressed) { longPressed = false; return; }
-    if (myDates.has(iso)) myDates.delete(iso); else myDates.add(iso);
-    markDirty();
+    const o = outingById(data, id); if (!o) return;
+    const s = mySet(o);
+    if (s.has(iso)) s.delete(iso); else s.add(iso);
+    markDirty(id);
     render();
   });
   cell.addEventListener('contextmenu', e => e.preventDefault());
 }
 
-/* ================= SHEET ================= */
-function openSheet(iso) {
-  const free = freeOn(iso);
-  const inSet = new Set(free);
-  if (myDates.has(iso)) inSet.add(myName);
-  const out = members().filter(n => !inSet.has(n));
-  $('sheetTitle').textContent = prettyDate(iso);
-  $('sheetWho').innerHTML = inSet.size
-    ? [...inSet].map(n => `<div class="row"><span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}</div>`).join('')
+/* ================= SHEETS ================= */
+function sheetTitle(o, iso) {
+  return prettyDate(iso) + (data.outings.length > 1 ? ` · ${outingLabel(o)}` : '');
+}
+function openSheet(id, iso) {
+  const o = outingById(data, id); if (!o) return;
+  const free = freeOn(o, iso);
+  const out = members().filter(n => !free.includes(n));
+  $('sheetTitle').textContent = sheetTitle(o, iso);
+  $('sheetWho').innerHTML = free.length
+    ? free.map(n => `<div class="row"><span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}</div>`).join('')
     : '<div class="nobody">Nobody has picked this night yet.</div>';
   $('sheetOut').textContent = out.length ? `Not free: ${out.join(', ')}` : '';
   const lockEl = $('sheetLock');
   lockEl.innerHTML = '';
   if (isHost() && iso >= todayIso()) {
     const btn = document.createElement('button');
-    if (data.lockedDate === iso) {
+    if (o.lockedDate === iso) {
       btn.className = 'sheet-lock-btn unlock';
       btn.textContent = 'Unlock this night ↩';
-      btn.onclick = () => { data.lockedDate = ''; closeSheet(); render(); save({ lock: '' }); };
+      btn.onclick = () => { closeSheet(); saveOuting(id, x => { x.lockedDate = ''; }, 'Unlocked'); };
     } else {
       btn.className = 'sheet-lock-btn lock';
       btn.textContent = 'Lock it in 🎬 — this is movie night';
-      btn.onclick = () => { data.lockedDate = iso; closeSheet(); render(); save({ lock: iso }); };
+      btn.onclick = () => { closeSheet(); saveOuting(id, x => { x.lockedDate = iso; }, '🎬 Locked! The group sees it now'); };
     }
     lockEl.appendChild(btn);
   }
   $('sheet').classList.add('open');
+  $('scrim').classList.add('open');
+}
+let lockSnap = {};
+function openLockSheet(id, iso) {
+  const o = outingById(data, id); if (!o) return;
+  const free = freeOn(o, iso);
+  const out = members().filter(n => !free.includes(n));
+  $('lockTitle').textContent = `Lock in ${sheetTitle(o, iso)}?`;
+  $('lockWho').innerHTML = free.length
+    ? free.map(n => `<div class="row"><span class="dot" style="background:${colorOf(n)}"></span>${esc(n)}${n === myName ? ' (you)' : ''}</div>`).join('')
+    : '<div class="nobody">Nobody has picked this night yet.</div>';
+  $('lockOut').textContent = out.length ? `Can't make it: ${out.join(', ')}` : 'Everyone can make it 🎉';
+  $('lockMovie').value = o.movie.title;
+  $('lockPoster').value = o.movie.poster;
+  $('lockTheater').value = o.theater;
+  $('lockShowtime').value = o.showtime;
+  $('lockConfirm').dataset.date = iso;
+  $('lockConfirm').dataset.outing = id;
+  lockSnap = { title: o.movie.title, poster: o.movie.poster, theater: o.theater, showtime: o.showtime };
+  $('lockSheet').classList.add('open');
   $('scrim').classList.add('open');
 }
 function closeSheet() {
@@ -1018,6 +1331,7 @@ function flashStatus(msg, cls, ms = 1800) {
 function enterApp() {
   $('welcome').style.display = 'none';
   $('app').hidden = false;
+  syncMine();
   render();
   load({ quiet: true });
 }
@@ -1025,12 +1339,11 @@ $('nameForm').addEventListener('submit', e => {
   e.preventDefault();
   let name = $('nameInput').value.trim().replace(/\s+/g, ' ');
   if (!name) return;
-  const existing = Object.keys(data.availability).find(n => n.toLowerCase() === name.toLowerCase());
+  const existing = members().find(n => n.toLowerCase() === name.toLowerCase());
   if (existing) name = existing; // "mike" and "Mike" are the same guy
   myName = name;
   localStorage.setItem('mn_name', myName);
-  if (!data.availability[myName]) data.availability[myName] = [];
-  myDates = new Set(data.availability[myName]);
+  myDates = {};
   enterApp();
 });
 $('userChip').addEventListener('click', () => {
@@ -1038,103 +1351,31 @@ $('userChip').addEventListener('click', () => {
   localStorage.removeItem('mn_name');
   location.reload();
 });
-$('movieEditBtn').addEventListener('click', () => {
-  $('movieInput').value = (data.movie && data.movie.title) || '';
-  $('moviePosterInput').value = (data.movie && data.movie.poster) || '';
-  $('movieTheaterInput').value = data.theater || '';
-  $('movieShowtimeInput').value = data.showtime || '';
-  $('movieEdit').classList.add('open');
-  $('movieInput').focus();
-});
-$('movieCancel').addEventListener('click', () => $('movieEdit').classList.remove('open'));
-$('movieSave').addEventListener('click', () => {
-  const title = $('movieInput').value.trim();
-  const poster = $('moviePosterInput').value.trim();
-  const theater = $('movieTheaterInput').value.trim();
-  const showtime = $('movieShowtimeInput').value.trim();
-  $('movieEdit').classList.remove('open');
-  const extra = { theater, showtime };
-  const prevTitle = (data.movie && data.movie.title) || '';
-  const prevPoster = (data.movie && data.movie.poster) || '';
-  if (title !== prevTitle || poster !== prevPoster) {
-    extra.movie = { title, poster, setBy: myName, updatedAt: new Date().toISOString() };
-    data.movie = extra.movie;
-  }
-  data.theater = theater;
-  data.showtime = showtime;
-  render();
-  save(extra);
-});
-$('saveBtn').addEventListener('click', () => save());
-$('bestCard').addEventListener('click', () => { if (!isHost()) openSheet($('bestCard').dataset.date); });
+$('saveBtn').addEventListener('click', () => { if (!saving) save(); });
+$('addOutingBtn').addEventListener('click', addOuting);
 $('lockCancel').addEventListener('click', closeSheet);
-$('detailsEditBtn').addEventListener('click', () => {
-  $('detailsTheater').value = data.theater || '';
-  $('detailsShowtime').value = data.showtime || '';
-  $('detailsEdit').classList.add('open');
-  $('detailsTheater').focus();
-});
-$('detailsCancel').addEventListener('click', () => $('detailsEdit').classList.remove('open'));
-$('detailsSave').addEventListener('click', () => {
-  const theater = $('detailsTheater').value.trim();
-  const showtime = $('detailsShowtime').value.trim();
-  $('detailsEdit').classList.remove('open');
-  data.theater = theater;
-  data.showtime = showtime;
-  render();
-  save({ theater, showtime });
-});
-$('icsBtn').addEventListener('click', downloadICS);
-function removeMember(name) {
-  delete data.availability[name];
-  if (filterName === name) filterName = null;
-  render();
-  save({ remove: name });
-}
-$('clearBtn').addEventListener('click', () => {
-  if (!confirm('Clear all your nights for this round? You can always tap days again if plans change.')) return;
-  myDates.clear();
-  markDirty();
-  render();
-});
-$('newRoundBtn').addEventListener('click', () => {
-  if (!confirm("Start a new movie night? This clears the current movie, theater, showtime, and lock, AND everyone's picked nights — the whole group starts fresh.")) return;
-  if (!confirm("Hey you're resetting the Movie Night app. Are you really sure?")) return;
-  startNewRound();
-});
 $('lockConfirm').addEventListener('click', () => {
   const iso = $('lockConfirm').dataset.date;
+  const id = $('lockConfirm').dataset.outing;
+  const o = outingById(data, id); if (!o) { closeSheet(); return; }
+  const was = lockSnap;
+  const now = { poster: $('lockPoster').value.trim(), theater: $('lockTheater').value.trim(), showtime: $('lockShowtime').value.trim() };
   const title = $('lockMovie').value.trim();
-  const poster = $('lockPoster').value.trim();
-  const extra = { lock: iso, theater: $('lockTheater').value.trim(), showtime: $('lockShowtime').value.trim() };
-  const prevTitle = (data.movie && data.movie.title) || '';
-  const prevPoster = (data.movie && data.movie.poster) || '';
-  if ((title && title !== prevTitle) || poster !== prevPoster) {
-    extra.movie = { title: title || prevTitle, poster, setBy: myName, updatedAt: new Date().toISOString() };
-    data.movie = extra.movie;
-  }
-  data.lockedDate = iso;
-  data.theater = extra.theater;
-  data.showtime = extra.showtime;
+  if (title) now.title = title;   // a blank title here means "set it later", not "erase it"
   closeSheet();
-  render();
-  save(extra);
-  flashStatus('🎬 Locked! The group sees it now', 'ok', 3000);
+  saveOuting(id, x => { applyChanges(x, was, now); x.lockedDate = iso; }, '🎬 Locked! The group sees it now');
 });
 $('scrim').addEventListener('click', closeSheet);
 
-setInterval(() => { if (!document.hidden && !dirty && !saving) load({ quiet: true }); }, CONFIG.POLL_MS);
+setInterval(() => { if (!document.hidden && myName && !dirty.size && !saving) load({ quiet: true }); }, CONFIG.POLL_MS);
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && myName && !dirty && !saving) load({ quiet: true });
+  if (!document.hidden && myName && !dirty.size && !saving) load({ quiet: true });
 });
 
 (async function init() {
-  // Pre-load data so the welcome screen can match "mike" to an existing "Mike"
-  try { data = pruneOld(await apiGet()); } catch (e) { /* welcome still works offline */ }
-  if (myName) {
-    myDates = new Set(data.availability[myName] || []);
-    enterApp();
-  }
+  if (myName) { enterApp(); return; }   // enterApp() does the first read
+  // New visitor: pre-load so the welcome screen can match "mike" to an existing "Mike"
+  try { data = pruneOld(await apiGet()); loaded = true; } catch (e) { /* welcome still works offline */ }
 })();
 </script>
 </body>
