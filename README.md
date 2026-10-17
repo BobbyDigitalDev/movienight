@@ -88,6 +88,10 @@ When `lockedDate` is set, everyone sees the official-night banner. Once that dat
 
 Normally unnecessary — past dates prune themselves and the movie title just gets overwritten. For a full wipe, open your bin in the JSONBin dashboard and restore the starter JSON from Setup step 1.
 
+## Customizing it (or working on it with an AI assistant)
+
+Start with [AGENTS.md](AGENTS.md). It points to [ARCHITECTURE.md](ARCHITECTURE.md) (how the code is laid out and how saving/syncing works), [DECISIONS.md](DECISIONS.md) (why it's built this way), and [TESTING.md](TESTING.md) (a manual test checklist, including how to test without touching your group's real data).
+
 ## Local development
 
 Serve over http (fetch can be flaky from `file://`):
