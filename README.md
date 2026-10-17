@@ -6,7 +6,7 @@ The whole thing is one `index.html` — no framework, no build step, no server. 
 
 ## Features
 
-- **Two-month rolling calendar** — always shows this month and next; past days prune themselves automatically, so it rolls forward after every movie night with zero maintenance
+- **Four-month rolling calendar** — always shows this month and the next three (change `MONTHS` in `CONFIG`); past days prune themselves automatically, so it rolls forward after every movie night with zero maintenance
 - **No accounts** — everyone just types a name once; it's remembered on their device ("mike" and "Mike" are matched, so no duplicate people)
 - **Per-person colors** — your picks glow in your color; everyone else shows up as count badges and colored dots
 - **🏆 Best Night card** — automatically surfaces the date(s) with the most overlap
@@ -47,7 +47,7 @@ const CONFIG = {
 };
 ```
 
-Replace the values with your own. (The bin values you'll find there belong to the original author's movie club — the app won't work for your group until you swap them.) `HOST_NAME` decides who sees the lock-in button; it matches case-insensitively against the name that person enters on the welcome screen.
+Replace the values with your own. (The bin values you'll find there belong to the original author's movie club — the app won't work for your group until you swap them.) `MONTHS` (default 4) sets how many months the calendar shows. `HOST_NAME` decides who sees the lock-in button; it matches case-insensitively against the name that person enters on the welcome screen.
 
 ### 3. Deploy
 

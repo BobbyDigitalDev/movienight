@@ -4,7 +4,7 @@ Guide for any AI assistant (or person) working on this project, whether you are 
 
 ## What this is
 
-Movie Night is a single-page scheduling app for a small group of friends. Each person enters a name, taps the evenings they are free on a two-month calendar, and the app highlights the night the most people can make. A host locks in the official night; everyone sees the date, movie, theater, and showtime and can add it to their calendar. Locked nights are archived to a history log when the board resets.
+Movie Night is a single-page scheduling app for a small group of friends. Each person enters a name, taps the evenings they are free on a rolling four-month calendar, and the app highlights the night the most people can make. A host locks in the official night; everyone sees the date, movie, theater, and showtime and can add it to their calendar. Locked nights are archived to a history log when the board resets.
 
 - **Stack:** one `index.html` (inline CSS + vanilla JS, no framework, no build step). Shared data lives in one JSONBin.io bin.
 - **Hosting:** GitHub Pages, deploy from branch `main` / root. See `README.md` for setup.

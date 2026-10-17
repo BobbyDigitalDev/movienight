@@ -18,7 +18,7 @@ Everything is in `index.html` (about 1,140 lines as of Oct 17, 2026). Line numbe
 3. `#lockedCard`: "It's Official" banner, only when `lockedDate` is set. Who's going, who can't, pencil to edit theater/showtime, `#calRow` with .ics download and Google Calendar link.
 4. `#bestCard`: Best Night, hidden once a night is locked. Host sees lock buttons ("pills") per tied date; others tap to see who's in.
 5. Instructions line, `#legend` (member chips, tap to filter; host sees ✕ to remove), `#clearBtn` (clear my nights)
-6. `#months`: two month grids (current + next)
+6. `#months`: `CONFIG.MONTHS` month grids (default 4: current + next 3). One column on phones, two columns at 860px+
 7. `#historyCard`: Movie Night History
 8. `#newRoundBtn`: New Movie Night (wipes the board, two confirms)
 
@@ -26,7 +26,7 @@ Everything is in `index.html` (about 1,140 lines as of Oct 17, 2026). Line numbe
 
 | Banner | Contents |
 |---|---|
-| `CONFIG` | `BIN_ID`, `ACCESS_KEY`, `HOST_NAME` (the host's name, case-insensitive), `API`, `POLL_MS` (45000), `PUT_DELAY` (1100). Also `PALETTE` (8 member colors). |
+| `CONFIG` | `BIN_ID`, `ACCESS_KEY`, `HOST_NAME` (the host's name, case-insensitive), `API`, `POLL_MS` (45000), `PUT_DELAY` (1100), `MONTHS` (4). Also `PALETTE` (8 member colors). |
 | `STATE` | Globals: `myName` (from `localStorage['mn_name']`), `data` (last known bin record), `myDates` (Set of your picks, local), `dirty` (unsaved picks), `saving`, `filterName` (legend filter), `longPressed` |
 | `HELPERS` | `$`, `pad`, `isoOf`, `todayIso`, `esc` (HTML escape), `hashIdx`, `assignColors` / `colorOf`, `prettyDate`, `members`, `isHost`, `freeOn`, `attendeesForRecord` |
 | `API` | `apiGet()` (GET `/latest`, returns `.record`), `apiPut(record)`, `describeError`, `pruneOld(record)` |

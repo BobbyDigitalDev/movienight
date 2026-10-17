@@ -12,6 +12,7 @@ Why things are the way they are. Ask the project owner before reversing any of t
 | Identity | Free-text name, remembered in `localStorage` (`mn_name`) | No accounts. The group can grow without code changes. `localStorage` survives browser restarts, unlike a session cookie | 2026-07-16 |
 | Name matching | Case-insensitive against existing names | "mike" and "Mike" are the same person, no duplicates | 2026-07-16 |
 | Calendar window | Rolling: current month + next month | Zero maintenance. Past days are grayed out and pruned from the bin on every save | 2026-07-16 |
+| Calendar window, expanded | Rolling: current month + next 3 (`CONFIG.MONTHS: 4`) | The group asked for more lead time. 4 rather than 3 so the desktop two-column layout is a balanced 2x2 grid | 2026-10-17 |
 | Granularity | Whole evenings only, no early/late show split | Keep v1 simple | 2026-07-16 |
 | Repo is public and generic | README written for strangers, MIT license, the original author's personal notes gitignored | So others can clone it for their own group | 2026-07-16 (commit 97751a3) |
 
@@ -30,7 +31,7 @@ Why things are the way they are. Ask the project owner before reversing any of t
 | New Movie Night | **Anyone** can wipe the board on demand, behind **two** confirms | Whoever is organizing this time can start the next round early | 2026-08-10 (b5c8ab5) |
 | History | Every locked night is archived (movie, poster, date, theater, showtime, attendees) before any wipe | Never lose the group's history | 2026-08-10 (3cf1b84) |
 | Posters | Optional pasted image URL, no movie API | No API keys, no lookup service (showtime and theater APIs are out of scope) | 2026-08-10 (3cf1b84) |
-| History dates | Show the year | History persists across years; other dates stay inside the two-month window and don't need it | 2026-08-10 (d6d3255) |
+| History dates | Show the year | History persists across years; other dates stay inside the rolling calendar window and don't need it | 2026-08-10 (d6d3255) |
 | History attendee order | Alphabetical at render time | Nobody reads as first or last, however the entry was created | 2026-08-10 (ac5092a) |
 
 ## Out of scope (from the original plan, still true unless the owner decides otherwise)

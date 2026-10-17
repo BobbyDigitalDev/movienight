@@ -454,7 +454,8 @@ const CONFIG = {
   HOST_NAME: 'bobby',   // the host can lock in the official night (case-insensitive)
   API: 'https://api.jsonbin.io/v3/b',
   POLL_MS: 45000,       // refresh others' picks while page is open
-  PUT_DELAY: 1100       // gap between the merge GET and the PUT (free tier: 1 req/sec)
+  PUT_DELAY: 1100,      // gap between the merge GET and the PUT (free tier: 1 req/sec)
+  MONTHS: 4             // how many months the calendar shows, starting with the current one
 };
 const PALETTE = ['#ff2d95','#22d3ee','#a3e635','#ffb020','#8b5cf6','#f43f5e','#14b8a6','#e9d502'];
 
@@ -894,7 +895,7 @@ function renderMonths() {
   holder.innerHTML = '';
   const now = new Date();
   const best = new Set(bestNights().dates);
-  for (let m = 0; m < 2; m++) {
+  for (let m = 0; m < CONFIG.MONTHS; m++) {
     const first = new Date(now.getFullYear(), now.getMonth() + m, 1);
     const monthEl = document.createElement('div');
     monthEl.className = 'month';

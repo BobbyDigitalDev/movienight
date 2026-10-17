@@ -27,6 +27,7 @@ Two browser profiles (or one normal + one private window) give you two users. Gi
 
 ### Picking and saving
 - [ ] Tapping a future day toggles it in your color and shows the Save bar with a count
+- [ ] The calendar shows `CONFIG.MONTHS` months starting with the current one (2x2 grid on desktop, stacked on phones)
 - [ ] Past days are grayed and not tappable
 - [ ] Save shows "Saving…" then "Saved ✓"; the other user sees the pick after reload or within 45 s
 - [ ] Two users saving at nearly the same time both keep their picks
